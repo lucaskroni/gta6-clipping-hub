@@ -468,6 +468,9 @@ document.addEventListener("click", async e => {
     await save(sb.from("progress").delete().neq("task_id", "")); toast("Progress reset"); render(); return;
   }
   if (b.id === "signout") { await sb.auth.signOut(); return; }
+  // Only task buttons need a redraw here. Redrawing on any other click (like a form's
+  // submit button) would remove the form before it can submit.
+  if (!(d.toggle || d.inc || d.dec)) return;
   if (!wasDone && stepDone(i)) toast(`${STEPS[i].badge} unlocked! +${STEPS[i].bonus} points`);
   render();
 });

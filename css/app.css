@@ -406,4 +406,7 @@ a.sx-phone:hover { transform: translateY(-3px); }
 #studio .cm-list .cm-who { color: var(--sx-mute); }
 #studio .cm-form input { background: rgba(255,255,255,.05); border-color: var(--sx-line); color: var(--sx-ink); }
 #studio .btn { background: rgba(255,255,255,.05); border-color: var(--sx-line); color: var(--sx-ink); }
+/* Let wide rows (nav, tabs) scroll inside themselves instead of stretching the page on phones. */
+.wrap > *, .page > *, .board > * { min-width: 0; }
+.tabs { max-width: 100%; }
 @media (max-width: 600px) { .wrap { padding: 16px 16px 48px; } .board { padding: 16px; } .timeline { padding-left: 0; } .timeline::before, .marker { display: none; } .camp { padding: 18px; } }
