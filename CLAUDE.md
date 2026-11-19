@@ -51,6 +51,13 @@ Use Row Level Security. Only Lucas and Leo should be able to read/write (simple 
 - One consistent button system (36 px height, 10 px radius), clear hierarchy on cards.
 - Everything readable on a phone.
 
+## Hosted app (set up Nov 19, 2026)
+- Live: https://lucaskroni.github.io/gta6-clipping-hub/ (GitHub Pages from `main`, root folder, no build step). Repo: github.com/lucaskroni/gta6-clipping-hub (public).
+- Supabase project `mlomhwirajypaakpnmkz` (org "Clipping_Program", free plan, eu-north-1). Schema in `supabase/migrations/`; add new changes as new numbered files and apply them.
+- Login: email magic link. Only emails in `public.allowed_emails` can sign up (trigger on `auth.users`) or read/write (RLS via `public.is_team()`). Never commit emails to this public repo; add them with SQL only.
+- Supabase's built-in email only delivers to members of the Supabase org, so each teammate must be invited to the org (or set up custom SMTP).
+- Not built yet: automatic clipping (Opus Clip API), "Write hooks with Claude" (needs an Anthropic API key in Supabase secrets), the cloud campaign scout. Clip studio currently queues links only.
+
 ## Known state (Nov 18, 2026)
 - Lucas ticked: YouTube channel, TikTok/Instagram, verify, Opus Clip sign-up. Campaign task not done.
 - Opus Clip account is on a trial; last clip job failed with "needs a paid plan or more credits".
