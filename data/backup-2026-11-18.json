@@ -1,0 +1,29 @@
+{
+  "exportedAt": "2026-11-18T18:20:00Z",
+  "source": "Claude artifact 'GTA 6 Clipping Roadmap' (https://claude.ai/artifact/6oCYN9Bo5i1ijq2aDDX7T1), database export",
+  "team": { "nameA": "Lucas", "nameB": "Leo" },
+  "progress": {
+    "yt": { "done": true, "count": 0 },
+    "social": { "done": true, "count": 0 },
+    "verify": { "done": true, "count": 0 },
+    "opus": { "done": true, "count": 0 },
+    "campaigns": { "done": false, "count": 0 }
+  },
+  "customTasks": [],
+  "campaigns": [
+    { "id": "gta6-tokyo-girl", "name": "GTA 6 Clipping Campaign - Tokyo Girl", "org": "Placements", "site": "Content Rewards", "link": "https://contentrewards.com/c/campaigns/40046522-56d9-45ad-9198-faea8eca90c6", "rate": 0.7, "rateUpTo": false, "maxPerClip": 35, "budgetUsed": 88, "budgetTotal": 2000, "category": "gta6", "live": true, "platforms": { "yt": false, "tt": true, "ig": true }, "note": "Music campaign: GTA 6-themed content using the song \"Tokyo Girl\" by Passive. Min payout $2 per clip.", "foundBy": "claude", "status": "considering", "pickA": false, "pickB": false },
+    { "id": "gta6-ai-clipscales", "name": "GTA 6 x AI Clipping [Unlimited Budget]", "org": "ClipScales", "site": "Content Rewards", "link": "https://contentrewards.com/c/campaigns/9e62f31a-c6fc-4b98-9b3a-c762dd4ef85d", "rate": 1, "maxPerClip": 200, "budget": "Unlimited", "category": "gta6", "live": false, "platforms": { "yt": true, "tt": false, "ig": false }, "note": "Paused. Tier 1 countries only, DM the owner for a bio code first. Allows AI mass-posting, which risks YouTube's spam rules.", "foundBy": "claude", "status": "considering" },
+    { "id": "cod-warzone-s1", "name": "Call of Duty - Warzone Season 1 Clipping", "org": "Clipping Culture (verified)", "site": "Content Rewards", "link": "https://contentrewards.com/c/campaigns/db285bc6-9a06-43ff-ae4b-4b5ebf149b8b", "rate": 2, "rateUpTo": true, "budgetUsed": 28900, "budgetTotal": 40000, "category": "gaming", "live": true, "platforms": {}, "note": "Rate depends on viewers' country.", "foundBy": "claude", "status": "considering" },
+    { "id": "cod-mw4-dmz", "name": "Call of Duty - MW4 DMZ Intel Briefing Clipping", "org": "Clipping Culture (verified)", "site": "Content Rewards", "link": "https://contentrewards.com/c/campaigns/a1cefc3b-4533-438f-8e70-a7299550f1cf", "rate": 2, "rateUpTo": true, "budgetUsed": 5100, "budgetTotal": 30000, "category": "gaming", "live": true, "platforms": {}, "note": "Rate depends on viewers' country. Lots of budget left.", "foundBy": "claude", "status": "considering" },
+    { "id": "sega-metaphor", "name": "SEGA - Metaphor ReFantazio Trailer Clipping", "org": "Clipping Culture (verified)", "site": "Content Rewards", "link": "https://contentrewards.com/c/campaigns/b5ff48d7-ec63-443a-b767-3a430a6f71f4", "rate": 2, "rateUpTo": true, "budgetUsed": 260, "budgetTotal": 12000, "category": "gaming", "live": true, "platforms": {}, "note": "Trailer clipping, almost the whole budget left.", "foundBy": "claude", "status": "considering" },
+    { "id": "faze-tournament", "name": "$8,500 FaZe Tournament Clipping Campaign", "org": "ClippedIn", "site": "Content Rewards", "link": "https://contentrewards.com/c/campaigns/200ea21b-be80-4db8-b552-8e32b148604e", "rate": 1, "budgetUsed": 32, "budgetTotal": 8500, "category": "gaming", "live": true, "platforms": {}, "note": "Esports tournament clips. Almost the whole budget left.", "foundBy": "claude", "status": "considering" }
+  ],
+  "clipJobs": [
+    { "id": "u3z9lagvi2o3v83wafes", "url": "https://www.youtube.com/watch?v=02nKv4rM_RM", "tool": "OpusClip", "length": 20, "count": 2, "who": "a", "status": "error", "error": "Opus Clip needs a paid plan or more credits for this." }
+  ],
+  "opusClipProjects": [
+    { "projectId": "P3111414ZS2V", "title": "Spandauer Imbiss-Mogul | Fast Food Manager", "url": "https://clip.opus.pro/clip/P3111414ZS2V" },
+    { "projectId": "P3111414pkQp", "title": "I BROUGHT 5 STARS TO AN AAU TOURNAMENT & FIGHTS BROKE OUT!", "url": "https://clip.opus.pro/clip/P3111414pkQp" }
+  ],
+  "scout": { "lastRun": "2026-11-14T16:55:00Z", "summary": "Content Rewards: 2 GTA 6 (1 paused) and 4 gaming. Vyro and Clipster: no GTA 6 yet." }
+}

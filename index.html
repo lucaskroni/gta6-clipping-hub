@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTA 6 Clipping Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%236a3df0'/><path d='M12 9l12 7-12 7z' fill='white'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Unbounded:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="login" id="login" hidden>
+  <div class="login-card">
+    <h1>GTA 6 Clipping Hub</h1>
+    <p>Team only. Enter your email and we'll send you a sign-in link.</p>
+    <form id="loginform">
+      <label for="loginEmail">Email<input id="loginEmail" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+      <button class="btn primary" type="submit">Send me a sign-in link</button>
+    </form>
+    <div class="login-msg" id="loginMsg" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <header class="top">
+    <div>
+      <h1>Our Roadmap</h1>
+      <div class="crumb">Roadmaps › <b>GTA 6 Clipping Team</b></div>
+    </div>
+    <div class="stats">
+      <span class="pill points"><span class="coin"></span><span id="points">0</span>&nbsp;team points</span>
+      <span class="pill overall"><span id="overall">0%</span>&nbsp;of the roadmap done</span>
+    </div>
+  </header>
+
+  <nav class="pagenav" id="pagenav" aria-label="Pages">
+    <a href="#roadmap" data-page="roadmap"><span class="pi">1</span>Roadmap<span class="pc" id="pc-roadmap"></span></a>
+    <a href="#studio" data-page="studio"><span class="pi">2</span>Clip studio<span class="pc" id="pc-studio"></span></a>
+    <a href="#campaigns" data-page="campaigns"><span class="pi">3</span>Campaigns<span class="pc" id="pc-campaigns"></span></a>
+    <a href="#guide" data-page="guide"><span class="pi">4</span>Guide &amp; rules</a>
+  </nav>
+
+  <section class="goal" aria-label="Current goal">
+    <div class="txt"><b>Our goal:</b> clip GTA 6 as a team of two. Paid streamer campaigns come first, our own channel second. GTA 6 launches Thursday, November 19, 2026, on PS5 and Xbox Series X|S, and the launch weeks are our biggest chance.</div>
+    <div class="countdown" id="countdown"></div>
+    <div class="team">
+      <label for="nameA">Clipper 1<input id="nameA" type="text" maxlength="16"></label>
+      <label for="nameB">Clipper 2<input id="nameB" type="text" maxlength="16"></label>
+    </div>
+  </section>
+
+  <div class="page" data-page="roadmap">
+  <div class="pagehead"><h2>Roadmap</h2><p>Your step-by-step plan for the GTA 6 launch. Tick tasks off together.</p></div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center">
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+    <div class="filter" id="filter" aria-label="Show tasks for"></div>
+  </div>
+
+  <main class="board">
+    <aside class="stepcard" id="stepcard"></aside>
+    <div class="timeline" id="timeline"></div>
+  </main>
+  </div>
+  <div class="page" data-page="studio">
+  <section class="camp" id="studio" aria-label="Clip studio"></section>
+  </div>
+  <div class="page" data-page="campaigns">
+  <section class="camp" id="campaigns" aria-label="Campaign picker"></section>
+  </div>
+  <div class="page" data-page="guide">
+  <div class="pagehead"><h2>Guide &amp; rules</h2><p>Your daily routine, your tools and the rules that keep your channel safe.</p></div>
+  <section class="ref" aria-label="Quick reference">
+    <div class="refcard">
+      <h3>Our daily routine (about 1 hour each)</h3>
+      <ol>
+        <li><b><span class="nA">Clipper 1</span> finds</b>: pick the freshest GTA 6 stream from a campaign streamer and run it through Opus Clip</li>
+        <li><b><span class="nA">Clipper 1</span> picks</b>: choose the best reactions and moments, skip story cutscenes</li>
+        <li><b><span class="nB">Clipper 2</span> polishes</b>: write the hook, mute the radio, check captions, trim the start</li>
+        <li><b><span class="nB">Clipper 2</span> posts</b>: Shorts, TikTok and Reels, with the campaign hashtags</li>
+        <li><b>Both log</b>: submit the links and note views after 48 hours</li>
+      </ol>
+      <p style="margin:0;font-size:14px;color:var(--muted)"><b style="color:var(--ink)">Swap roles every Monday</b> so neither of you gets bored. On a low-energy day, one clip each still counts.</p>
+    </div>
+    <div class="refcard">
+      <h3>Your toolkit</h3>
+      <table>
+        <tr><td><a href="https://www.opus.pro" target="_blank" rel="noopener">Opus Clip</a> · AI clipping</td><td>Free → $15/mo</td></tr>
+        <tr><td><a href="https://vizard.ai" target="_blank" rel="noopener">Vizard</a> · free practice minutes</td><td>Free</td></tr>
+        <tr><td><a href="https://www.capcut.com" target="_blank" rel="noopener">CapCut</a> · small fixes</td><td>Free</td></tr>
+        <tr><td><a href="https://contentrewards.com" target="_blank" rel="noopener">Content Rewards</a> · paid campaigns</td><td>Free</td></tr>
+        <tr><td>YouTube Studio · stats</td><td>Free</td></tr>
+      </table>
+    </div>
+    <div class="refcard">
+      <h3>GTA 6 rules that keep us safe</h3>
+      <ol>
+        <li><b>No story cutscenes or the ending.</b> Rockstar removes isolated cinematics and spoilers.</li>
+        <li><b>No leaks.</b> Nothing from before launch that isn't official.</li>
+        <li><b>Mute the radio.</b> Licensed songs trigger Content ID claims.</li>
+        <li><b>No NPC-massacre compilations.</b> YouTube can demonetize shock content.</li>
+        <li><b>No GTA logo or Rockstar art</b> as our channel branding, and no "official"-sounding name.</li>
+        <li><b>Always add our own hook.</b> Never post AI clips untouched.</li>
+        <li><b>Never buy views,</b> and remember Take-Two can take any video down.</li>
+        <li><b>Split money in writing</b> and talk to a tax advisor once money comes in.</li>
+      </ol>
+    </div>
+  </section>
+  </div>
+
+  <div class="foot">
+    <span id="sync"></span>
+    <span class="account"><span id="who"></span><button class="btn" id="signout" type="button">Sign out</button><button class="btn" id="reset" type="button">Reset progress</button></span>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTA 6 Clipping Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Unbounded:wght@600;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: sticky step card left, vertical timeline of task sections right — progress drives every colour. */
+:root {
+  --bg: #f7f7fa;
+  --surface: #ffffff;
+  --line: #e7e6ef;
+  --ink: #17161f;
+  --muted: #6b6a7b;
+  --accent: #6a3df0;
+  --accent-soft: #efeaff;
+  --good: #18a35a;
+  --good-soft: #e3f6eb;
+  --gold: #e08a12;
+  --gold-soft: #fff3df;
+  --shadow: 0 1px 2px rgba(23,22,31,.04), 0 4px 16px rgba(23,22,31,.05);
+  --font: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111017; --surface: #1a1922; --line: #2c2a38; --ink: #f1f0f6; --muted: #a09fb2;
+    --accent: #9b7bff; --accent-soft: #2a2145; --good: #3ccf7f; --good-soft: #17301f;
+    --gold: #f2a93b; --gold-soft: #33260f; --shadow: 0 1px 2px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111017; --surface: #1a1922; --line: #2c2a38; --ink: #f1f0f6; --muted: #a09fb2;
+  --accent: #9b7bff; --accent-soft: #2a2145; --good: #3ccf7f; --good-soft: #17301f;
+  --gold: #f2a93b; --gold-soft: #33260f; --shadow: 0 1px 2px rgba(0,0,0,.3);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.5; }
+button { font-family: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a { color: var(--accent); }
+
+.wrap { max-width: 1240px; margin: 0 auto; padding: 24px 20px 64px; display: grid; gap: 20px; }
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.top h1 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -.01em; }
+.crumb { color: var(--muted); font-size: 14px; margin-top: 2px; }
+.crumb b { color: var(--ink); font-weight: 600; }
+.stats { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; font-weight: 600; font-size: 14px; }
+.pill.points { color: var(--gold); background: var(--gold-soft); }
+.pill.overall { color: var(--accent); background: var(--accent-soft); }
+.coin { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffd36b, #e08a12); }
+
+.tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+.tab { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font-size: 14px; font-weight: 600; }
+.tab .num { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; background: var(--line); color: var(--muted); font-size: 13px; }
+.tab .sub { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; }
+.tab[aria-selected="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.tab[aria-selected="true"] .num { background: var(--accent); color: #fff; }
+.tab.done .num { background: var(--good); color: #fff; }
+
+.board { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 28px; display: grid; grid-template-columns: 340px 1fr; gap: 32px; box-shadow: var(--shadow); }
+@media (max-width: 900px) { .board { grid-template-columns: 1fr; padding: 18px; } }
+
+.stepcard { position: sticky; top: 20px; align-self: start; border: 1px solid var(--line); border-radius: 16px; padding: 22px; display: grid; gap: 14px; background: var(--surface); }
+@media (max-width: 900px) { .stepcard { position: static; } }
+.stephead { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.stephead .label { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600; }
+.badge-num { width: 26px; height: 26px; border-radius: 7px; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 14px; font-weight: 700; }
+.pct { font-size: 12px; color: var(--muted); text-align: right; min-width: 110px; }
+.bar { height: 5px; border-radius: 99px; background: var(--line); overflow: hidden; margin-top: 4px; }
+.bar > i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .4s ease; }
+.bar.good > i { background: var(--good); }
+.stepcard h2 { margin: 6px 0 0; font-size: 21px; text-wrap: balance; }
+.stepcard p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.meta { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 12px; }
+.meta li { display: flex; align-items: center; gap: 12px; font-size: 16px; }
+.meta .ic { width: 26px; height: 26px; border-radius: 7px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; flex: none; }
+.meta .ic svg { width: 15px; height: 15px; }
+.meta .reward { color: var(--gold); font-size: 14px; }
+.unlocked { display: none; border-radius: 12px; padding: 12px 14px; background: var(--good-soft); color: var(--good); font-weight: 600; font-size: 14px; }
+.stepcard.complete .unlocked { display: block; }
+.nextbtn { justify-self: start; border: 0; background: var(--accent); color: #fff; padding: 10px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; display: none; }
+.stepcard.complete .nextbtn { display: inline-block; }
+
+.timeline { display: grid; gap: 36px; position: relative; padding-left: 56px; }
+.timeline::before { content: ""; position: absolute; left: 21px; top: 22px; bottom: 0; width: 2px; background: var(--line); }
+.section { position: relative; display: grid; gap: 14px; }
+.marker { position: absolute; left: -56px; top: -4px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); font-size: 11px; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+.marker.ring { background: conic-gradient(var(--accent) var(--p), var(--line) 0); }
+.marker.ring::after { content: attr(data-l); position: absolute; inset: 4px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; }
+.marker.check { background: var(--accent); color: #fff; box-shadow: 0 0 0 5px var(--accent-soft); }
+.marker.check svg { width: 20px; height: 20px; }
+.section h3 { margin: 0; font-size: 21px; font-weight: 700; text-wrap: balance; }
+.section.complete h3 { color: var(--accent); }
+.section > p { margin: 0; color: var(--muted); max-width: 68ch; font-size: 15.5px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+
+.card { border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: grid; gap: 10px; background: var(--surface); box-shadow: var(--shadow); align-content: start; }
+.thumb { position: relative; height: 112px; border-radius: 10px; display: grid; place-items: center; overflow: hidden; color: #fff; }
+.thumb svg { width: 44px; height: 44px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.25)); }
+.thumb .time { position: absolute; right: 8px; bottom: 8px; background: rgba(0,0,0,.6); color: #fff; font-size: 11px; padding: 2px 6px; border-radius: 4px; font-variant-numeric: tabular-nums; }
+.thumb::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, rgba(255,255,255,.07) 0 2px, transparent 2px 14px); }
+.t-red { background: linear-gradient(135deg, #f0532b, #f78a3c); }
+.t-blue { background: linear-gradient(135deg, #2b5cf0, #4f8af7); }
+.t-violet { background: linear-gradient(135deg, #5b33d6, #8a62ff); }
+.t-teal { background: linear-gradient(135deg, #0d7f86, #22b3a5); }
+.t-navy { background: linear-gradient(135deg, #1b2347, #2f3f7a); }
+.t-pink { background: linear-gradient(135deg, #d6336c, #f06595); }
+.t-gold { background: linear-gradient(135deg, #c96d06, #f2a93b); }
+.t-green { background: linear-gradient(135deg, #12804a, #34c47c); }
+.card h4 { margin: 0; font-size: 16px; font-weight: 700; line-height: 1.3; }
+.card .how { margin: 0; color: var(--muted); font-size: 13.5px; }
+.card .how a { font-weight: 600; }
+.status { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; }
+.status .s { color: var(--muted); font-variant-numeric: tabular-nums; }
+.card.done .status .s { color: var(--good); font-weight: 600; }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 6px 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.card.done .btn.primary { background: var(--good-soft); color: var(--good); border-color: transparent; }
+.counter { display: flex; gap: 6px; }
+.counter .btn { width: 32px; padding: 6px 0; }
+
+.ref { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.refcard { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px; display: grid; gap: 10px; align-content: start; }
+.refcard h3 { margin: 0; font-size: 17px; }
+.refcard ol, .refcard ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+.refcard li b { color: var(--ink); }
+.refcard table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.refcard td { padding: 6px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.refcard td:last-child { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 10px; }
+.foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--muted); font-size: 13px; }
+.goal { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 14px; padding: 16px 18px; display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; justify-content: space-between; }
+.goal .txt { max-width: 70ch; font-size: 15px; }
+.goal .txt b { color: var(--accent); }
+.countdown { display: flex; align-items: baseline; gap: 8px; font-weight: 700; }
+.countdown .big { font-size: 34px; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.countdown .small { color: var(--muted); font-size: 13px; font-weight: 600; max-width: 140px; line-height: 1.3; }
+.team { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.team label { font-size: 12px; color: var(--muted); font-weight: 600; display: grid; gap: 2px; }
+.team input { font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 5px 9px; width: 130px; }
+.filter { display: flex; gap: 6px; flex-wrap: wrap; }
+.chipbtn { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.chipbtn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.owner { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; justify-self: start; }
+.owner.o-a { background: var(--accent-soft); color: var(--accent); }
+.owner.o-b { background: var(--gold-soft); color: var(--gold); }
+.owner.o-both { background: var(--good-soft); color: var(--good); }
+.card.hidden { display: none; }
+.cardrow { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.cardtools { display: flex; gap: 10px; }
+.linkbtn { border: 0; background: none; padding: 0; color: var(--muted); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.linkbtn:hover { color: var(--accent); }
+.addform { display: grid; grid-template-columns: 1.2fr 1.6fr .8fr auto; gap: 10px; align-items: end; }
+@media (max-width: 700px) { .addform { grid-template-columns: 1fr; } }
+.addform label { display: grid; gap: 4px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.addform input, .addform select { font: inherit; font-size: 14px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; min-width: 0; }
+.addform .btn { padding: 8px 14px; }
+.camp { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: grid; gap: 16px; box-shadow: var(--shadow); }
+.camphead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; }
+.camphead h2 { margin: 0; font-size: 22px; }
+.camphead p { margin: 2px 0 0; color: var(--muted); font-size: 14.5px; max-width: 70ch; }
+.campsum { display: flex; gap: 8px; flex-wrap: wrap; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+.ctable { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 860px; }
+.ctable th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; padding: 10px 12px; background: var(--bg); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.ctable td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.ctable tr:last-child td { border-bottom: 0; }
+.ctable td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ctable tr.dropped td { opacity: .5; }
+.ctable tr.joined td:first-child { box-shadow: inset 3px 0 0 var(--good); }
+.cname { font-weight: 700; }
+.cnote { color: var(--muted); font-size: 12.5px; margin-top: 2px; max-width: 34ch; }
+.plat { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 5px; background: var(--line); color: var(--muted); margin-right: 3px; }
+.plat.on { background: var(--accent-soft); color: var(--accent); }
+.pick { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 999px; padding: 3px 9px; font-size: 12px; font-weight: 600; cursor: pointer; margin: 2px 4px 2px 0; }
+.pick[aria-pressed="true"] { background: var(--good-soft); color: var(--good); border-color: transparent; }
+.ctable select { font: inherit; font-size: 13px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 4px 6px; }
+.empty { color: var(--muted); font-size: 14px; padding: 18px; text-align: center; }
+.campform { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; align-items: end; }
+.campform .wide { grid-column: span 2; }
+@media (max-width: 900px) { .campform { grid-template-columns: 1fr 1fr; } .campform .wide { grid-column: span 2; } }
+.campform label { display: grid; gap: 4px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.campform input { font: inherit; font-size: 14px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; min-width: 0; }
+.campform fieldset { border: 0; padding: 0; margin: 0; display: flex; gap: 10px; align-items: center; font-size: 13px; }
+.campform legend { font-size: 12px; font-weight: 600; color: var(--muted); padding: 0; margin-bottom: 4px; }
+.campform fieldset label { display: flex; gap: 4px; align-items: center; color: var(--ink); font-weight: 600; }
+.jobs { display: grid; gap: 12px; }
+.job { border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 10px; background: var(--surface); }
+.jobtop { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: center; }
+.jobtitle { font-weight: 700; word-break: break-word; }
+.jobmeta { color: var(--muted); font-size: 13px; }
+.state { font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--line); color: var(--muted); white-space: nowrap; }
+.state.processing, .state.starting { background: var(--accent-soft); color: var(--accent); }
+.state.done { background: var(--good-soft); color: var(--good); }
+.state.error { background: var(--gold-soft); color: var(--gold); }
+.jobmsg { font-size: 13.5px; color: var(--muted); }
+.jobmsg.err { color: var(--gold); font-weight: 600; }
+.cliplist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; counter-reset: c; }
+.cliplist li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: baseline; font-size: 14px; padding: 6px 0; border-top: 1px solid var(--line); }
+.cliplist li::before { counter-increment: c; content: counter(c); font-weight: 700; color: var(--accent); }
+.cliplist .hook { display: block; color: var(--good); font-size: 13px; font-weight: 600; margin-top: 2px; }
+.cliplist .cm { color: var(--muted); font-size: 12.5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.jobbtns { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.studioform { display: grid; grid-template-columns: 2.4fr 1fr .8fr .7fr .9fr auto; gap: 10px; align-items: end; }
+@media (max-width: 900px) { .studioform { grid-template-columns: 1fr 1fr; } .studioform .wide { grid-column: span 2; } }
+.studioform label { display: grid; gap: 4px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.studioform input, .studioform select { font: inherit; font-size: 14px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; min-width: 0; }
+.jobbtns a.btn { text-decoration: none; display: inline-block; }
+.note { font-size: 13px; color: var(--muted); margin: 0; }
+.pagenav { position: sticky; top: 0; z-index: 5; display: flex; gap: 4px; overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 6px; box-shadow: var(--shadow); }
+.pagenav a { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 10px; color: var(--muted); font-weight: 600; font-size: 14.5px; text-decoration: none; }
+.pagenav a:hover { background: var(--bg); color: var(--ink); }
+.pagenav a[aria-current="page"] { background: var(--accent); color: #fff; }
+.pagenav .pi { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: 12px; background: var(--line); color: var(--muted); }
+.pagenav a[aria-current="page"] .pi { background: rgba(255,255,255,.22); color: #fff; }
+.pagenav .pc { font-size: 12px; font-weight: 700; padding: 1px 7px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-variant-numeric: tabular-nums; }
+.pagenav .pc:empty { display: none; }
+.pagenav a[aria-current="page"] .pc { background: rgba(255,255,255,.22); color: #fff; }
+.page { display: grid; gap: 20px; }
+.page[hidden] { display: none; }
+.pagehead h2 { margin: 0; font-size: 24px; text-wrap: balance; }
+.pagehead p { margin: 2px 0 0; color: var(--muted); font-size: 15px; }
+/* Clip studio: its own dark creator-app world, the same in light and dark mode */
+#studio { --sx-bg: #0d0b14; --sx-panel: #17142a; --sx-line: #2c2745; --sx-ink: #f6f3ff; --sx-mute: #a49fbf; --sx-hot: #ff2d87; --sx-cool: #7b2cff; --sx-cyan: #00e0ff; --sx-display: "Unbounded", "Figtree", system-ui, sans-serif;
+  color-scheme: dark; background: radial-gradient(900px 380px at 0% -10%, rgba(255,45,135,.28), transparent 60%), radial-gradient(800px 380px at 100% 0%, rgba(0,224,255,.18), transparent 60%), var(--sx-bg);
+  color: var(--sx-ink); border: 1px solid var(--sx-line); border-radius: 24px; padding: 28px; gap: 18px; box-shadow: 0 20px 60px rgba(13,11,20,.35); }
+#studio a { color: var(--sx-cyan); }
+.sx-hero { display: grid; gap: 8px; }
+.sx-kicker { display: inline-flex; align-items: center; gap: 8px; justify-self: start; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--sx-mute); background: rgba(255,255,255,.06); border: 1px solid var(--sx-line); padding: 5px 11px; border-radius: 999px; }
+.sx-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sx-hot); box-shadow: 0 0 0 0 rgba(255,45,135,.6); animation: sxPulse 1.6s infinite; display: inline-block; }
+@keyframes sxPulse { 0% { box-shadow: 0 0 0 0 rgba(255,45,135,.6); } 70% { box-shadow: 0 0 0 9px rgba(255,45,135,0); } 100% { box-shadow: 0 0 0 0 rgba(255,45,135,0); } }
+.sx-title { margin: 4px 0 0; font-family: var(--sx-display); font-weight: 800; font-size: clamp(26px, 4.4vw, 44px); line-height: 1.05; letter-spacing: -.02em; text-wrap: balance; }
+.sx-grad { background: linear-gradient(90deg, var(--sx-hot), #ff9a3c 45%, var(--sx-cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.sx-sub { margin: 0; color: var(--sx-mute); max-width: 60ch; font-size: 15.5px; }
+.sx-stats { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 6px; }
+.sx-stats div { display: grid; }
+.sx-stats b { font-family: var(--sx-display); font-size: 24px; font-variant-numeric: tabular-nums; }
+.sx-stats span { font-size: 12px; color: var(--sx-mute); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+#studio .studioform { display: grid; gap: 12px; grid-template-columns: 1fr; }
+.sx-drop { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.05); border: 1.5px solid var(--sx-line); border-radius: 18px; padding: 8px 8px 8px 16px; transition: border-color .2s, box-shadow .2s; }
+.sx-drop:focus-within { border-color: var(--sx-hot); box-shadow: 0 0 0 4px rgba(255,45,135,.18); }
+.sx-drop > svg { width: 20px; height: 20px; color: var(--sx-mute); flex: none; }
+#studio .sx-drop input { flex: 1; min-width: 0; background: none; border: 0; color: var(--sx-ink); font: inherit; font-size: 16px; padding: 10px 0; outline: none; }
+#studio .sx-drop input::placeholder { color: var(--sx-mute); }
+.sx-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.sx-go { display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer; font: inherit; font-weight: 800; font-size: 15px; color: #fff; padding: 12px 20px; border-radius: 13px; background: linear-gradient(90deg, var(--sx-hot), var(--sx-cool)); box-shadow: 0 8px 24px rgba(255,45,135,.35); }
+.sx-go svg { width: 18px; height: 18px; }
+.sx-go:hover { filter: brightness(1.08); }
+.sx-opts { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.sx-seg { border: 0; margin: 0; padding: 0; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.sx-seg legend, .sx-lg { float: left; margin-right: 6px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--sx-mute); padding: 0; }
+.sx-seg label { position: relative; cursor: pointer; }
+.sx-seg input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.sx-seg span { display: inline-block; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--sx-line); font-size: 13.5px; font-weight: 700; color: var(--sx-mute); background: rgba(255,255,255,.03); }
+.sx-seg input:checked + span { color: #fff; border-color: transparent; background: linear-gradient(90deg, var(--sx-hot), var(--sx-cool)); }
+.sx-seg input:focus-visible + span { outline: 2px solid var(--sx-cyan); outline-offset: 2px; }
+.sx-count { display: flex; align-items: center; gap: 4px; }
+.sx-step { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--sx-line); background: rgba(255,255,255,.04); color: var(--sx-ink); font-size: 16px; font-weight: 700; cursor: pointer; }
+#studio .sx-count input { width: 44px; text-align: center; background: none; border: 0; color: var(--sx-ink); font: inherit; font-family: var(--sx-display); font-size: 18px; -moz-appearance: textfield; }
+#studio .sx-count input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.sx-note { margin: 0; font-size: 13px; color: var(--sx-mute); }
+#studio .jobs { gap: 14px; }
+.sx-job { background: var(--sx-panel); border: 1px solid var(--sx-line); border-radius: 20px; padding: 16px 18px; color: var(--sx-ink); }
+.sx-job .jobtitle { font-size: 16px; }
+.sx-job .jobmsg { color: var(--sx-mute); }
+.sx-job .jobmsg.err { color: #ffb020; }
+.sx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.sx-tags span { font-size: 12px; font-weight: 700; color: var(--sx-mute); background: rgba(255,255,255,.05); border: 1px solid var(--sx-line); padding: 2px 9px; border-radius: 999px; }
+.sx-state { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,.06); color: var(--sx-mute); white-space: nowrap; }
+.sx-state.processing, .sx-state.starting { background: rgba(255,45,135,.14); color: #ff7ab6; }
+.sx-state.done { background: rgba(32,227,178,.14); color: #3dffc5; }
+.sx-state.error { background: rgba(255,176,32,.14); color: #ffb020; }
+.sx-bar { height: 6px; border-radius: 99px; background: rgba(255,255,255,.07); overflow: hidden; }
+.sx-bar i { display: block; height: 100%; width: 40%; border-radius: 99px; background: linear-gradient(90deg, var(--sx-hot), var(--sx-cyan)); animation: sxSlide 1.8s ease-in-out infinite; }
+@keyframes sxSlide { 0% { transform: translateX(-100%); } 100% { transform: translateX(260%); } }
+.sx-reel { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 10px; scroll-snap-type: x mandatory; }
+.sx-phone { position: relative; flex: 0 0 150px; aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden; scroll-snap-align: start; display: block; text-decoration: none; color: #fff !important; box-shadow: 0 10px 26px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.12); transition: transform .2s; }
+.sx-phone::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.05) 40%, rgba(0,0,0,.65)); }
+a.sx-phone:hover { transform: translateY(-3px); }
+.sx-rank, .sx-dur { position: absolute; top: 9px; z-index: 1; font-size: 11.5px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: rgba(0,0,0,.45); font-variant-numeric: tabular-nums; }
+.sx-rank { left: 9px; }
+.sx-dur { right: 9px; }
+.sx-play { position: absolute; z-index: 1; left: 50%; top: 42%; transform: translate(-50%, -50%); width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.22); backdrop-filter: blur(4px); }
+.sx-play svg { width: 22px; height: 22px; margin-left: 3px; }
+.sx-cap { position: absolute; z-index: 1; left: 10px; right: 10px; top: 38%; transform: translateY(-50%); text-align: center; font-family: var(--sx-display); font-weight: 800; font-size: 14px; line-height: 1.15; text-transform: uppercase; text-shadow: 0 2px 0 #000, 0 0 10px rgba(0,0,0,.6); -webkit-text-stroke: .6px #000; }
+.sx-foot { position: absolute; z-index: 1; left: 10px; right: 10px; bottom: 10px; display: grid; gap: 4px; }
+.sx-fire { display: inline-flex; align-items: center; gap: 3px; justify-self: start; font-size: 12px; font-weight: 800; color: #ffd36b; }
+.sx-fire svg { width: 13px; height: 13px; }
+.sx-ct { font-size: 12px; font-weight: 600; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.sx-btn { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: 13.5px; font-weight: 700; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--sx-line); background: rgba(255,255,255,.05); color: var(--sx-ink) !important; text-decoration: none; cursor: pointer; }
+.sx-btn.hot { border: 0; color: #fff !important; background: linear-gradient(90deg, var(--sx-hot), var(--sx-cool)); }
+.sx-btn.ghost { background: none; }
+#studio .linkbtn { color: var(--sx-mute); }
+#studio .linkbtn:hover { color: var(--sx-ink); }
+.sx-empty { display: grid; gap: 4px; text-align: center; padding: 34px 16px; color: var(--sx-mute); border: 1.5px dashed var(--sx-line); border-radius: 20px; }
+.sx-empty b { font-family: var(--sx-display); color: var(--sx-ink); font-size: 17px; }
+@media (max-width: 700px) { #studio { padding: 18px; } .sx-drop { flex-wrap: wrap; } .sx-go { width: 100%; justify-content: center; } .sx-phone { flex-basis: 128px; } }
+@media (prefers-reduced-motion: reduce) { .sx-dot, .sx-bar i { animation: none; } }
+/* ---- button system ---- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 13.5px; font-weight: 650; letter-spacing: .005em; text-decoration: none; cursor: pointer; white-space: nowrap; transition: background .15s, border-color .15s, box-shadow .15s, transform .08s; }
+.btn:hover { background: var(--bg); border-color: color-mix(in srgb, var(--line) 50%, var(--muted)); }
+.btn:active { transform: translateY(1px); }
+.btn svg { width: 15px; height: 15px; flex: none; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 1px 0 rgba(255,255,255,.2) inset, 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent); }
+.btn.primary:hover { background: color-mix(in srgb, var(--accent) 88%, #000); }
+.btn.success { background: var(--good-soft); border-color: transparent; color: var(--good); }
+.btn.success:hover { background: color-mix(in srgb, var(--good-soft) 80%, var(--good)); }
+.btn:disabled { opacity: .5; cursor: default; transform: none; }
+.status .btn { height: 30px; padding: 0 11px; font-size: 12.5px; border-radius: 8px; }
+.counter .btn { width: 30px; padding: 0; }
+.linkbtn { height: 28px; padding: 0 8px; border-radius: 7px; transition: background .15s, color .15s; }
+.linkbtn:hover { background: var(--bg); color: var(--ink); }
+.linkbtn.danger:hover { color: #d14343; background: color-mix(in srgb, #d14343 10%, transparent); }
+.chipbtn { height: 32px; padding: 0 13px; display: inline-flex; align-items: center; gap: 6px; transition: background .15s, color .15s, border-color .15s; }
+.chipbtn:hover { color: var(--ink); border-color: color-mix(in srgb, var(--line) 50%, var(--muted)); }
+/* ---- campaigns ---- */
+.cx-scout { display: flex; gap: 12px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; max-width: 400px; }
+.cx-scout b { display: block; font-size: 14px; }
+.cx-scout span { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+.cx-live { width: 10px; height: 10px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px var(--good-soft); flex: none; }
+.cx-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.cx-n { font-variant-numeric: tabular-nums; font-size: 12px; padding: 1px 7px; border-radius: 999px; background: var(--bg); color: var(--muted); }
+.chipbtn[aria-pressed="true"] .cx-n { background: rgba(255,255,255,.22); color: #fff; }
+.cx-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; align-items: start; }
+.cx-card { position: relative; display: grid; gap: 14px; padding: 18px 18px 12px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: 0 1px 2px rgba(23,22,31,.04), 0 8px 24px rgba(23,22,31,.05); overflow: hidden; transition: box-shadow .2s, transform .2s; }
+.cx-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--line); }
+.cx-card.cat-gta6::before { background: linear-gradient(90deg, #ff6a2b, #ff2d87); }
+.cx-card.cat-gaming::before { background: linear-gradient(90deg, var(--accent), #4f8af7); }
+.cx-card:hover { box-shadow: 0 1px 2px rgba(23,22,31,.05), 0 14px 32px rgba(23,22,31,.09); }
+.cx-card.joined { border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+.cx-card.is-paused .cx-rate, .cx-card.is-paused .cx-fund { opacity: .55; }
+.cx-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.cx-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.cx-badges span { height: 22px; display: inline-flex; align-items: center; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: 0 8px; border-radius: 6px; }
+.cx-cat { background: var(--bg); color: var(--muted); }
+.cat-gta6 .cx-cat { background: #fff0e8; color: #c2410c; }
+.cat-gaming .cx-cat { background: var(--accent-soft); color: var(--accent); }
+.cx-new { background: #ff2d87; color: #fff; }
+.cx-paused { background: var(--gold-soft); color: var(--gold); }
+.cx-joined { background: var(--good-soft); color: var(--good); }
+.cx-site { font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.cx-titleblock { display: grid; gap: 3px; }
+.cx-card h3 { margin: 0; font-size: 17px; line-height: 1.3; font-weight: 750; text-wrap: balance; }
+.cx-org { font-size: 13px; color: var(--muted); }
+.cx-rate { display: flex; justify-content: space-between; align-items: end; gap: 12px; padding: 14px 16px; border-radius: 14px; background: var(--bg); }
+.cx-rate-main { display: grid; }
+.cx-upto { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.cx-rate-main b { font-size: 30px; line-height: 1.05; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.cx-unit { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.cx-cap { display: grid; text-align: right; }
+.cx-cap b { font-size: 17px; font-variant-numeric: tabular-nums; }
+.cx-cap span { font-size: 11.5px; color: var(--muted); }
+.cx-fund { display: grid; gap: 7px; }
+.cx-fund-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--muted); }
+.cx-fund-row b { color: var(--ink); font-size: 14px; font-variant-numeric: tabular-nums; }
+.cx-fund-row b i { font-style: normal; color: var(--muted); font-weight: 500; font-size: 12.5px; }
+.cx-meter { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.cx-meter i { display: block; height: 100%; border-radius: 99px; background: var(--good); }
+.cx-meter.low i { background: var(--gold); }
+.cx-plat { display: flex; gap: 6px; flex-wrap: wrap; }
+.cx-pchip { height: 24px; display: inline-flex; align-items: center; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 650; border: 1px solid var(--line); color: var(--ink); }
+.cx-muted { font-size: 12.5px; color: var(--muted); }
+.cx-note { display: flex; gap: 8px; margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink); background: var(--gold-soft); border-radius: 12px; padding: 10px 12px; }
+.cx-note svg { width: 16px; height: 16px; flex: none; color: var(--gold); margin-top: 1px; }
+.cx-who { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+.cx-who-label { font-size: 13px; font-weight: 650; color: var(--muted); }
+.cx-card .cx-who-label { color: var(--muted); }
+.cx-avatars { display: flex; gap: 6px; }
+.cx-av { width: 34px; height: 34px; border-radius: 50%; border: 1.5px dashed color-mix(in srgb, var(--line) 40%, var(--muted)); background: var(--surface); color: var(--muted); font: inherit; font-weight: 800; font-size: 13px; cursor: pointer; transition: background .15s, color .15s, border-color .15s, transform .1s; }
+.cx-av:hover { border-color: var(--accent); color: var(--accent); }
+.cx-av:active { transform: scale(.94); }
+.cx-av[aria-pressed="true"] { border: 1.5px solid transparent; background: var(--accent); color: #fff; }
+.cx-av.b[aria-pressed="true"] { background: #ff6a2b; }
+.cx-av:disabled { cursor: default; }
+.cx-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cx-cta .btn { width: 100%; }
+.cx-cta .btn:only-child { grid-column: 1 / -1; }
+.cx-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.cx-links { display: flex; gap: 2px; margin-right: -8px; }
+.cx-add summary { cursor: pointer; font-weight: 700; color: var(--accent); font-size: 14px; margin-bottom: 10px; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); opacity: 0; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 14px; transition: .3s; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Our Roadmap</h1>
+      <div class="crumb">Roadmaps › <b>GTA 6 Clipping Team</b></div>
+    </div>
+    <div class="stats">
+      <span class="pill points"><span class="coin"></span><span id="points">0</span>&nbsp;team points</span>
+      <span class="pill overall"><span id="overall">0%</span>&nbsp;of the roadmap done</span>
+    </div>
+  </header>
+
+  <nav class="pagenav" id="pagenav" aria-label="Pages">
+    <a href="#roadmap" data-page="roadmap"><span class="pi">1</span>Roadmap<span class="pc" id="pc-roadmap"></span></a>
+    <a href="#studio" data-page="studio"><span class="pi">2</span>Clip studio<span class="pc" id="pc-studio"></span></a>
+    <a href="#campaigns" data-page="campaigns"><span class="pi">3</span>Campaigns<span class="pc" id="pc-campaigns"></span></a>
+    <a href="#guide" data-page="guide"><span class="pi">4</span>Guide &amp; rules</a>
+  </nav>
+
+  <section class="goal" aria-label="Current goal">
+    <div class="txt"><b>Our goal:</b> clip GTA 6 as a team of two. Paid streamer campaigns come first, our own channel second. GTA 6 launches Thursday, November 19, 2026, on PS5 and Xbox Series X|S, and the launch weeks are our biggest chance.</div>
+    <div class="countdown" id="countdown"></div>
+    <div class="team">
+      <label for="nameA">Clipper 1<input id="nameA" type="text" maxlength="16"></label>
+      <label for="nameB">Clipper 2<input id="nameB" type="text" maxlength="16"></label>
+    </div>
+  </section>
+
+  <div class="page" data-page="roadmap">
+  <div class="pagehead"><h2>Roadmap</h2><p>Your step-by-step plan for the GTA 6 launch. Tick tasks off together.</p></div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center">
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+    <div class="filter" id="filter" aria-label="Show tasks for"></div>
+  </div>
+
+  <main class="board">
+    <aside class="stepcard" id="stepcard"></aside>
+    <div class="timeline" id="timeline"></div>
+  </main>
+  </div>
+  <div class="page" data-page="studio">
+  <section class="camp" id="studio" aria-label="Clip studio"></section>
+  </div>
+  <div class="page" data-page="campaigns">
+  <section class="camp" id="campaigns" aria-label="Campaign picker"></section>
+  </div>
+  <div class="page" data-page="guide">
+  <div class="pagehead"><h2>Guide &amp; rules</h2><p>Your daily routine, your tools and the rules that keep your channel safe.</p></div>
+  <section class="ref" aria-label="Quick reference">
+    <div class="refcard">
+      <h3>Our daily routine (about 1 hour each)</h3>
+      <ol>
+        <li><b><span class="nA">Clipper 1</span> finds</b>: pick the freshest GTA 6 stream from a campaign streamer and run it through Opus Clip</li>
+        <li><b><span class="nA">Clipper 1</span> picks</b>: choose the best reactions and moments, skip story cutscenes</li>
+        <li><b><span class="nB">Clipper 2</span> polishes</b>: write the hook, mute the radio, check captions, trim the start</li>
+        <li><b><span class="nB">Clipper 2</span> posts</b>: Shorts, TikTok and Reels, with the campaign hashtags</li>
+        <li><b>Both log</b>: submit the links and note views after 48 hours</li>
+      </ol>
+      <p style="margin:0;font-size:14px;color:var(--muted)"><b style="color:var(--ink)">Swap roles every Monday</b> so neither of you gets bored. On a low-energy day, one clip each still counts.</p>
+    </div>
+    <div class="refcard">
+      <h3>Your toolkit</h3>
+      <table>
+        <tr><td><a href="https://www.opus.pro" target="_blank" rel="noopener">Opus Clip</a> · AI clipping</td><td>Free → $15/mo</td></tr>
+        <tr><td><a href="https://vizard.ai" target="_blank" rel="noopener">Vizard</a> · free practice minutes</td><td>Free</td></tr>
+        <tr><td><a href="https://www.capcut.com" target="_blank" rel="noopener">CapCut</a> · small fixes</td><td>Free</td></tr>
+        <tr><td><a href="https://contentrewards.com" target="_blank" rel="noopener">Content Rewards</a> · paid campaigns</td><td>Free</td></tr>
+        <tr><td>YouTube Studio · stats</td><td>Free</td></tr>
+      </table>
+    </div>
+    <div class="refcard">
+      <h3>GTA 6 rules that keep us safe</h3>
+      <ol>
+        <li><b>No story cutscenes or the ending.</b> Rockstar removes isolated cinematics and spoilers.</li>
+        <li><b>No leaks.</b> Nothing from before launch that isn't official.</li>
+        <li><b>Mute the radio.</b> Licensed songs trigger Content ID claims.</li>
+        <li><b>No NPC-massacre compilations.</b> YouTube can demonetize shock content.</li>
+        <li><b>No GTA logo or Rockstar art</b> as our channel branding, and no "official"-sounding name.</li>
+        <li><b>Always add our own hook.</b> Never post AI clips untouched.</li>
+        <li><b>Never buy views,</b> and remember Take-Two can take any video down.</li>
+        <li><b>Split money in writing</b> and talk to a tax advisor once money comes in.</li>
+      </ol>
+    </div>
+  </section>
+  </div>
+
+  <div class="foot">
+    <span id="sync"></span>
+    <button class="btn" id="reset" type="button">Reset progress</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const ICONS = {
+  play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>',
+  phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>',
+  spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg>',
+  scissors: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12"/></svg>',
+  coin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.6-1-1.7-1.5-3-1.5-1.7 0-3 .9-3 2s1.3 1.7 3 2 3 .9 3 2-1.3 2-3 2c-1.3 0-2.4-.5-3-1.5M12 6v2M12 16v2"/></svg>',
+  eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  bookmark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>',
+  upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>',
+  list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>',
+  chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-7"/></svg>',
+  calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  flask: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 006.2 21h11.6a2 2 0 001.7-2.5L14 9V3"/><path d="M7 15h10"/></svg>',
+  flag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  level: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 18v-4M12 18V10M18 18V6"/></svg>',
+  tasks: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12l3 3 5-6"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>',
+  medal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="6"/><path d="M8.5 10L6 3h4l2 5 2-5h4l-2.5 7"/></svg>'
+};
+
+const STEPS = [
+  { name: "First Step", title: "Launch prep", weeks: "Sat Nov 14 – Wed Nov 18", level: "Beginner", hours: "About 1–2 hours a day each", bonus: 400, badge: "Bronze Badge",
+    desc: "Five days to get ready before GTA 6 drops. Set up as a team, get your tools, lock in your campaigns and practice until clipping feels easy. Nothing gets posted yet. You're done when you can both turn a stream into a finished clip in under 20 minutes.",
+    sections: [
+      { title: "Set up as a team", desc: "Do this together on day one. Five minutes of agreeing now saves a lot of arguing later.", tasks: [
+        { id: "deal", owner: "both", title: "Write your team agreement", time: "30 min", icon: "list", theme: "t-navy", pts: 100,
+          how: "Write down how you split earnings and costs, whose Whop account receives payouts, who owns the channel, and what happens if one of you stops." },
+        { id: "yt", owner: "a", title: "Create the channel as a Brand Account", time: "20 min", icon: "play", theme: "t-red", pts: 50,
+          how: "Make an original name with no GTA logo and nothing \"official\"-sounding, then add your partner as a manager. Don't share passwords." },
+        { id: "social", owner: "b", title: "Grab TikTok and Instagram", time: "15 min", icon: "phone", theme: "t-pink", pts: 50,
+          how: "Use the same name as the YouTube channel. Design a simple original logo in Canva." },
+        { id: "verify", owner: "a", title: "Verify the YouTube channel", time: "5 min", icon: "shield", theme: "t-green", pts: 50,
+          how: "Verify by phone in YouTube Studio's channel settings. This unlocks longer uploads and custom thumbnails." } ] },
+      { title: "Tools and campaigns", desc: "Everything is free for now. Find your GTA 6 campaigns before everyone else does.", tasks: [
+        { id: "opus", owner: "a", title: "Sign up for Opus Clip", time: "5 min", icon: "spark", theme: "t-violet", pts: 50,
+          how: 'Your AI clipper. <a href="https://www.opus.pro" target="_blank" rel="noopener">opus.pro</a> (free: 60 min a month)' },
+        { id: "rewards", owner: "b", title: "Join Content Rewards", time: "10 min", icon: "coin", theme: "t-gold", pts: 50,
+          how: 'Link your social accounts under Profile. <a href="https://contentrewards.com" target="_blank" rel="noopener">contentrewards.com</a>' },
+        { id: "campaigns", owner: "b", title: "Save 3 GTA 6 streamer campaigns", time: "30 min", icon: "bookmark", theme: "t-gold", pts: 100, target: 3,
+          how: "Browse Content Rewards Discover and add GTA 6 or gaming-streamer campaigns to the Campaign picker below. Compare pay, approval rate and budget left." } ] },
+      { title: "Practice before launch", desc: "Train your eye on GTA content now, so launch day is muscle memory.", tasks: [
+        { id: "study", owner: "both", title: "Study 30 viral GTA clips", time: "15 min/day", icon: "eye", theme: "t-navy", pts: 100, target: 30,
+          how: "Watch trending GTA streamer Shorts. Count each one you don't skip, and note what happens in its first 2 seconds." },
+        { id: "practice", owner: "a", title: "Make 5 practice clips", time: "30 min/day", icon: "scissors", theme: "t-violet", pts: 150, target: 5,
+          how: "Use a GTA 5 or trailer-reaction stream. Run it through Opus Clip, rewrite the hooks, trim slow starts. Don't post these." },
+        { id: "template", owner: "b", title: "Build your hook and caption style", time: "45 min", icon: "spark", theme: "t-teal", pts: 100,
+          how: "Pick one caption font and color, and write 10 hook lines you can reuse. Learn to mute or replace audio in CapCut." } ] }
+    ] },
+  { name: "Second Step", title: "Launch week", weeks: "Thu Nov 19 – Wed Nov 25", level: "Beginner", hours: "About 1–2 hours a day each", bonus: 600, badge: "Silver Badge",
+    desc: "GTA 6 is out and everyone is streaming it. Demand for clips is at its peak, so speed and volume matter most this week. You're done when you've posted 30 clips together and one has been approved for payout.",
+    sections: [
+      { title: "Launch day", desc: "Be early. The first good clips of the big streamers travel the furthest.", tasks: [
+        { id: "pick", owner: "b", title: "Pick your 2 main streamers", time: "30 min", icon: "eye", theme: "t-navy", pts: 50,
+          how: "Out of your saved campaigns, choose the 2 streamers whose GTA 6 reactions are funniest or loudest." },
+        { id: "day1", owner: "both", title: "Post 4 clips on launch day", time: "Nov 19", icon: "upload", theme: "t-red", pts: 150, target: 4,
+          how: "Two each. Tap + after each clip you post and submit." } ] },
+      { title: "Post every day", desc: "About 4 clips a day between you, on YouTube Shorts, TikTok and Reels.", tasks: [
+        { id: "posts30", owner: "both", title: "Post 30 clips this week", time: "1 hour/day each", icon: "upload", theme: "t-red", pts: 250, target: 30,
+          how: "Check every clip before posting: no story cutscenes, radio muted, your own hook." },
+        { id: "payout", owner: "both", title: "Get your first approved clip", time: "Milestone", icon: "coin", theme: "t-gold", pts: 150,
+          how: "Your first clip approved for payout. Tick it the day it happens." } ] },
+      { title: "Track what works", desc: "One shared log, so you both learn from every clip.", tasks: [
+        { id: "log", owner: "a", title: "Start a shared clip log", time: "10 min", icon: "list", theme: "t-teal", pts: 50,
+          how: "A shared sheet with one row per clip: streamer, hook, length, views after 48h, approved or not." },
+        { id: "best", owner: "b", title: "Spot your best hook", time: "15 min", icon: "chart", theme: "t-blue", pts: 100,
+          how: "At the end of the week, which hook style got the most views? Write it down and reuse it." } ] }
+    ] },
+  { name: "Third Step", title: "Ride the wave", weeks: "Nov 26 – Dec 16", level: "Intermediate", hours: "About 1 hour a day each", bonus: 800, badge: "Gold Badge",
+    desc: "The hype is still huge, but more clippers are joining. Turn it into a calm routine, swap roles weekly, and become the go-to clippers for one streamer. You're done when your routine runs smoothly and you know your best clip type.",
+    sections: [
+      { title: "Quick check-in", desc: "Still posting most days? Then the upgrade pays for itself.", tasks: [
+        { id: "upgrade", owner: "a", title: "Decide on Opus Clip Starter", time: "5 min", icon: "spark", theme: "t-violet", pts: 50,
+          how: "Posting daily: upgrade ($15/month, no watermark) and split the cost as agreed. Not yet: fix the routine first." },
+        { id: "swap", owner: "both", title: "Swap roles for a week", time: "1 week", icon: "calendar", theme: "t-teal", pts: 100,
+          how: "Clipper 1 polishes and posts, Clipper 2 finds and picks. Keeps it fresh and you both learn every part." } ] },
+      { title: "Daily rhythm", desc: "About 5 clips a day between you.", tasks: [
+        { id: "posts100", owner: "both", title: "Post 100 clips", time: "1 hour/day each", icon: "upload", theme: "t-red", pts: 400, target: 100,
+          how: "Tap + after each clip. Three weeks at about 5 a day gets you there." } ] },
+      { title: "Weekly reviews", desc: "Fifteen minutes together every Sunday.", tasks: [
+        { id: "reviews", owner: "both", title: "Do 3 Sunday reviews together", time: "15 min/week", icon: "calendar", theme: "t-teal", pts: 150, target: 3,
+          how: "Look at your 3 best and 3 worst clips. Agree on one thing to do more of and one to stop." },
+        { id: "own", owner: "b", title: "Own one streamer", time: "Ongoing", icon: "flag", theme: "t-gold", pts: 100,
+          how: "Become the fastest clipper for one streamer's GTA 6 sessions. Being first on their best moments is your edge." },
+        { id: "trim", owner: "a", title: "Drop weak campaigns", time: "10 min", icon: "scissors", theme: "t-navy", pts: 50,
+          how: "Leave campaigns that keep rejecting clips or are running out of budget." } ] }
+    ] },
+  { name: "Final Step", title: "Make it last", weeks: "Dec 17 – Jan 13", level: "Intermediate", hours: "About 1 hour a day each", bonus: 1000, badge: "Platinum Badge",
+    desc: "The launch wave cools down. Experiment, get ready for the next GTA 6 moment, and decide together where to go next.",
+    sections: [
+      { title: "Small experiments", desc: "Change one thing at a time so you know what made the difference.", tasks: [
+        { id: "length", owner: "a", title: "Test long vs. short clips", time: "1 week", icon: "flask", theme: "t-blue", pts: 150, target: 10,
+          how: "Post 5 long ones (45–60 s) and 5 short ones (15–25 s), then compare views in your log." },
+        { id: "angle", owner: "b", title: "Try a new angle on your own channel", time: "1 week", icon: "spark", theme: "t-violet", pts: 100,
+          how: "If you own a PS5 or Xbox: tips, secrets or funny moments from your own gameplay. No story spoilers." },
+        { id: "online", owner: "b", title: "Get ready for GTA 6 Online", time: "Watch", icon: "eye", theme: "t-navy", pts: 100,
+          how: "Rockstar hasn't announced its online mode's launch yet. When it does, plan a second launch push like week one." } ] },
+      { title: "Check-in together", desc: "Compare what you earned with the time you put in, then choose your path.", tasks: [
+        { id: "compare", owner: "both", title: "Compare earnings vs. time", time: "30 min", icon: "chart", theme: "t-teal", pts: 100,
+          how: "Add up payouts and hours for each of you. Is it growing week over week?" },
+        { id: "tax", owner: "a", title: "Book a tax advisor (if earning)", time: "30 min", icon: "shield", theme: "t-green", pts: 100,
+          how: "Two people earning together in Austria may count as a partnership (GesbR). One appointment clears it up." },
+        { id: "decide", owner: "both", title: "Choose your path", time: "Decision", icon: "flag", theme: "t-gold", pts: 150,
+          how: "Growing: keep going, maybe Opus Clip Pro. Flat: try a second streamer or angle. Not enjoying it: stopping is fine." } ] }
+    ] }
+];
+
+const LAUNCH = "2026-11-19";
+const LOCAL_KEY = "gta6-clipping-roadmap-v2";
+const VIEW_KEY = "gta6-clipping-roadmap-view";
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+// Shared team data (synced through the page's database when available, else kept in this browser)
+let shared = { done: {}, count: {}, nameA: "Lucas", nameB: "Partner", custom: [], campaigns: [], jobs: [] };
+// Per-viewer view settings (always local)
+let view = { step: 0, show: "all" };
+try { const s = JSON.parse(localStorage.getItem(LOCAL_KEY)); if (s) shared = Object.assign(shared, s); } catch (e) {}
+try { const v = JSON.parse(localStorage.getItem(VIEW_KEY)); if (v) view = Object.assign(view, v); } catch (e) {}
+const saveView = () => { try { localStorage.setItem(VIEW_KEY, JSON.stringify(view)); } catch (e) {} };
+const saveLocal = () => { if (db) return; try { localStorage.setItem(LOCAL_KEY, JSON.stringify(shared)); } catch (e) {} };
+
+let db = null, comments = null, readOnly = false, syncState = "local";
+
+const customFor = i => shared.custom.filter(c => c.step === i).sort((a, b) => (a.created || 0) - (b.created || 0)).map(c => ({
+  id: "c_" + c.key, key: c.key, custom: true, owner: c.owner || "both", title: c.title, how: c.how || "",
+  time: "Our task", icon: "flag", theme: "t-teal", pts: 50 }));
+const sectionsFor = i => {
+  const extra = customFor(i);
+  return extra.length ? STEPS[i].sections.concat([{ title: "Our own tasks", desc: "Tasks you added yourselves.", tasks: extra }]) : STEPS[i].sections;
+};
+const allTasks = i => sectionsFor(i).flatMap(x => x.tasks);
+const prog = t => t.target ? Math.min(shared.count[t.id] || 0, t.target) / t.target : (shared.done[t.id] ? 1 : 0);
+const isDone = t => prog(t) >= 1;
+const stepPct = i => { const ts = allTasks(i); return ts.reduce((a, t) => a + prog(t), 0) / ts.length; };
+const stepDone = i => allTasks(i).every(isDone);
+const ownerName = o => o === "a" ? shared.nameA : o === "b" ? shared.nameB : "Both";
+const visible = t => view.show === "all" || t.owner === "both" || t.owner === view.show;
+
+function points() {
+  let p = 0;
+  STEPS.forEach((s, i) => { allTasks(i).forEach(t => { if (isDone(t)) p += t.pts; }); if (stepDone(i)) p += s.bonus; });
+  return p;
+}
+
+function toast(msg) {
+  const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show");
+  clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 2600);
+}
+
+function renderCountdown() {
+  const today = new Date(); const t0 = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+  const days = Math.round((Date.parse(LAUNCH) - t0) / 864e5);
+  const el = document.getElementById("countdown");
+  if (days > 0) el.innerHTML = `<span class="big">${days}</span><span class="small">${days === 1 ? "day" : "days"} until GTA 6 launches</span>`;
+  else if (days === 0) el.innerHTML = `<span class="big">Today</span><span class="small">GTA 6 is out. Go!</span>`;
+  else el.innerHTML = `<span class="big">Day ${1 - days}</span><span class="small">since GTA 6 launched</span>`;
+}
+
+function renderTeam() {
+  const a = document.getElementById("nameA"), b = document.getElementById("nameB");
+  if (document.activeElement !== a) a.value = shared.nameA;
+  if (document.activeElement !== b) b.value = shared.nameB;
+  a.disabled = b.disabled = readOnly;
+  document.querySelectorAll(".nA").forEach(e => e.textContent = shared.nameA);
+  document.querySelectorAll(".nB").forEach(e => e.textContent = shared.nameB);
+  const opts = [["all", "Everyone"], ["a", shared.nameA], ["b", shared.nameB]];
+  document.getElementById("filter").innerHTML = opts.map(([k, l]) =>
+    `<button class="chipbtn" type="button" data-show="${k}" aria-pressed="${view.show === k}">${esc(l)}</button>`).join("");
+  const sync = document.getElementById("sync");
+  sync.textContent = syncState === "live" ? (readOnly ? "Synced with your team. You can view, but only people with edit access can change it." : "Synced live with your team. Changes show up for both of you.")
+    : syncState === "loading" ? "Connecting to your team's shared progress…"
+    : syncState === "stale" ? "Can't reach the shared progress right now. What you see may be out of date."
+    : "Progress is saved in this browser only.";
+}
+
+function renderTabs() {
+  document.getElementById("tabs").innerHTML = STEPS.map((s, i) => {
+    const ts = allTasks(i), d = ts.filter(isDone).length;
+    return `<button class="tab ${stepDone(i) ? "done" : ""}" role="tab" aria-selected="${i === view.step}" data-i="${i}">
+      <span class="num">${stepDone(i) ? "✓" : i + 1}</span>${s.title}<span class="sub">${d}/${ts.length}</span></button>`;
+  }).join("");
+}
+
+function renderCard() {
+  const i = view.step, s = STEPS[i], ts = allTasks(i), pct = Math.round(stepPct(i) * 100);
+  const mine = k => ts.filter(t => t.owner === k).length;
+  const el = document.getElementById("stepcard");
+  el.className = "stepcard" + (stepDone(i) ? " complete" : "");
+  el.innerHTML = `
+    <div class="stephead">
+      <span class="label"><span class="badge-num">${i + 1}</span>${s.name}</span>
+      <div class="pct">${pct}% completed<div class="bar"><i style="width:${pct}%"></i></div></div>
+    </div>
+    <h2>${s.title}</h2>
+    <p>${s.desc}</p>
+    <ul class="meta">
+      <li><span class="ic">${ICONS.calendar}</span>${s.weeks}</li>
+      <li><span class="ic">${ICONS.level}</span>${s.level}</li>
+      <li><span class="ic">${ICONS.tasks}</span>${ts.length} tasks: ${mine("a")} ${esc(shared.nameA)}, ${mine("b")} ${esc(shared.nameB)}, ${mine("both")} together</li>
+      <li><span class="ic">${ICONS.clock}</span>${s.hours}</li>
+      <li><span class="ic" style="background:var(--gold-soft);color:var(--gold)">${ICONS.medal}</span>+${s.bonus} points <span class="reward">(${s.badge})</span></li>
+    </ul>
+    <div class="unlocked">${s.badge} unlocked. Nice teamwork.</div>
+    ${i < STEPS.length - 1 ? `<button class="nextbtn" type="button" data-next="1">Continue to Step ${i + 2}</button>` : ""}`;
+}
+
+function renderTimeline() {
+  const i = view.step;
+  const html = sectionsFor(i).map(sec => {
+    const n = sec.tasks.length, d = sec.tasks.filter(isDone).length, full = d === n;
+    const p = sec.tasks.reduce((a, t) => a + prog(t), 0) / n;
+    const marker = full ? `<div class="marker check">${ICONS.check}</div>`
+      : `<div class="marker ring" style="--p:${Math.round(p * 100)}%" data-l="${d}/${n}"></div>`;
+    return `<section class="section ${full ? "complete" : ""}">${marker}
+      <h3>${sec.title}</h3><p>${sec.desc}</p>
+      <div class="cards">${sec.tasks.map(card).join("")}</div></section>`;
+  }).join("");
+  const form = readOnly ? "" : `<section class="section addsec"><div class="marker ring" style="--p:0%" data-l="+"></div>
+      <h3>Add your own task</h3><p>Anything else you two want on this step. It's shared with your partner.</p>
+      <form class="addform" id="addform">
+        <label for="newTitle">Task<input id="newTitle" type="text" maxlength="80" required placeholder="e.g. Make a channel banner"></label>
+        <label for="newHow">Details<input id="newHow" type="text" maxlength="200" placeholder="What exactly to do"></label>
+        <label for="newOwner">Who<select id="newOwner"><option value="both">Both</option><option value="a">${esc(shared.nameA)}</option><option value="b">${esc(shared.nameB)}</option></select></label>
+        <button class="btn primary" type="submit">Add task</button>
+      </form></section>`;
+  document.getElementById("timeline").innerHTML = html + form;
+}
+
+function card(t) {
+  const done = isDone(t), pr = prog(t);
+  let status, control;
+  if (t.target) {
+    const c = Math.min(shared.count[t.id] || 0, t.target);
+    status = done ? "Completed" : `${c} of ${t.target}`;
+    control = readOnly ? "" : `<span class="counter"><button class="btn" type="button" data-dec="${t.id}" aria-label="Remove one from ${esc(t.title)}">−</button><button class="btn primary" type="button" data-inc="${t.id}" aria-label="Add one to ${esc(t.title)}">+</button></span>`;
+  } else {
+    status = done ? "Completed" : "Not started";
+    control = readOnly ? "" : `<button class="btn primary" type="button" data-toggle="${t.id}">${done ? "Done ✓" : "Mark done"}</button>`;
+  }
+  const title = t.custom ? esc(t.title) : t.title, how = t.custom ? esc(t.how) : t.how;
+  const tools = `<span class="cardtools">${comments ? `<button class="linkbtn" type="button" data-comment="1">Comment</button>` : ""}${t.custom && !readOnly ? `<button class="linkbtn" type="button" data-del="${t.key}">Remove</button>` : ""}</span>`;
+  return `<article class="card ${done ? "done" : ""} ${visible(t) ? "" : "hidden"}" data-comment-target>
+    <div class="thumb ${t.theme}">${ICONS[t.icon]}<span class="time">${t.time}</span></div>
+    <div class="cardrow"><span class="owner o-${t.owner}">${esc(ownerName(t.owner))}</span>${tools}</div>
+    <h4>${title}</h4>
+    <p class="how">${how}</p>
+    <div class="bar ${done ? "good" : ""}"><i style="width:${Math.round(pr * 100)}%"></i></div>
+    <div class="status"><span class="s">${status} · +${t.pts}</span>${control}</div>
+  </article>`;
+}
+
+function render() {
+  renderCountdown(); renderTeam(); renderTabs(); renderCard(); renderTimeline(); renderStudio(); renderCampaigns(); renderNavCounts();
+  document.getElementById("points").textContent = points().toLocaleString("en");
+  const all = STEPS.flatMap((s, i) => allTasks(i));
+  document.getElementById("overall").textContent = Math.round(all.reduce((a, t) => a + prog(t), 0) / all.length * 100) + "%";
+  document.getElementById("reset").hidden = readOnly;
+}
+
+
+const STATUS = [["considering", "Considering"], ["joined", "Joined"], ["dropped", "Dropped"]];
+const CATS = { gta6: "GTA 6", gaming: "Gaming", other: "Other" };
+const safeUrl = u => /^https:\/\/[^\s"'<>]+$/.test(u || "") ? u : "";
+let campFilter = "all", scoutInfo = null;
+const money = n => n >= 1000 ? "$" + (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "") + "K" : "$" + Math.round(n);
+const ago = t => { if (!t) return ""; const h = (Date.now() - t) / 36e5; return h < 1 ? "just now" : h < 24 ? Math.floor(h) + "h ago" : Math.floor(h / 24) + "d ago"; };
+function renderCampaigns() {
+  const el = document.getElementById("campaigns");
+  if (el.contains(document.activeElement) && document.activeElement.closest(".campform")) { renderCampRows(); return; }
+  const list = shared.campaigns, live = list.filter(c => c.status !== "dropped");
+  const n = { all: live.length, gta6: live.filter(c => c.category === "gta6").length, gaming: live.filter(c => c.category === "gaming").length, joined: list.filter(c => c.status === "joined").length };
+  const fresh = list.filter(c => c.foundAt && Date.now() - c.foundAt < 48 * 36e5).length;
+  el.innerHTML = `
+    <div class="camphead">
+      <div><h2>Campaigns</h2>
+        <p>Claude checks the clipping sites twice a day and adds new GTA 6 and gaming campaigns here. Tap your name on the ones you like and join the ones you both pick.</p></div>
+      <div class="cx-scout"><span class="cx-live"></span><div><b>${scoutInfo && scoutInfo.lastRun ? "Last checked " + ago(scoutInfo.lastRun) : "Not checked yet"}</b>
+        <span>${scoutInfo && scoutInfo.summary ? esc(scoutInfo.summary) : "Next check runs automatically."}${fresh ? ` · ${fresh} new in the last 2 days` : ""}</span></div></div>
+    </div>
+    <div class="cx-filters" role="group" aria-label="Show campaigns">${[["all", "All active"], ["gta6", "GTA 6"], ["gaming", "Gaming"], ["joined", "Joined"]].map(([k, l]) =>
+      `<button type="button" class="chipbtn" data-cfilter="${k}" aria-pressed="${campFilter === k}">${l} <span class="cx-n">${n[k]}</span></button>`).join("")}</div>
+    <div class="cx-grid" id="cgrid"></div>
+    ${readOnly ? "" : `<details class="cx-add"><summary>Add a campaign yourself</summary><form class="campform" id="campform">
+      <label class="wide" for="cName">Campaign<input id="cName" type="text" maxlength="80" required placeholder="e.g. GTA 6 Clipping Campaign"></label>
+      <label class="wide" for="cLink">Link<input id="cLink" type="url" maxlength="300" placeholder="https://contentrewards.com/…"></label>
+      <label for="cRate">$ per 1K views<input id="cRate" type="number" min="0" max="100" step="0.05" placeholder="1.00"></label>
+      <label for="cCat">Type<select id="cCat"><option value="gta6">GTA 6</option><option value="gaming">Gaming</option><option value="other">Other</option></select></label>
+      <label for="cBudget">Budget<input id="cBudget" type="text" maxlength="30" placeholder="$12K of $20K used"></label>
+      <fieldset><legend>Platforms allowed</legend>
+        <label><input type="checkbox" id="pYT" checked>YT</label><label><input type="checkbox" id="pTT" checked>TT</label><label><input type="checkbox" id="pIG" checked>IG</label></fieldset>
+      <label class="wide" for="cNote">Notes<input id="cNote" type="text" maxlength="160" placeholder="Rules, required hashtags, which streamer…"></label>
+      <button class="btn primary" type="submit">Add campaign</button>
+    </form></details>`}`;
+  renderCampRows();
+}
+function renderCampRows() {
+  const g = document.getElementById("cgrid"); if (!g) return;
+  const catRank = { gta6: 0, gaming: 1, other: 2 }, stRank = { joined: 0, considering: 1, dropped: 2 };
+  let list = shared.campaigns.slice();
+  if (campFilter === "joined") list = list.filter(c => c.status === "joined");
+  else { list = list.filter(c => c.status !== "dropped"); if (campFilter !== "all") list = list.filter(c => c.category === campFilter); }
+  list.sort((a, b) => (stRank[a.status] - stRank[b.status]) || (catRank[a.category] - catRank[b.category]) || ((a.live === false) - (b.live === false)) || ((b.rate || 0) - (a.rate || 0)));
+  const dropped = shared.campaigns.filter(c => c.status === "dropped").length;
+  if (!list.length) { g.innerHTML = `<div class="empty" style="grid-column:1/-1">${campFilter === "joined" ? "You haven't joined a campaign yet." : "No campaigns here yet. Claude adds new ones automatically."}</div>`; return; }
+  const initials = n => esc(String(n || "?").trim().slice(0, 1).toUpperCase());
+  g.innerHTML = list.map(c => {
+    const url = safeUrl(c.link), isNew = c.foundAt && Date.now() - c.foundAt < 48 * 36e5;
+    const left = c.budgetTotal ? Math.max(0, c.budgetTotal - c.budgetUsed) : 0;
+    const pctLeft = c.budgetTotal ? Math.round(left / c.budgetTotal * 100) : null;
+    const plat = ["yt", "tt", "ig"].filter(k => c.platforms && c.platforms[k]);
+    const PL = { yt: "YouTube", tt: "TikTok", ig: "Reels" };
+    const both = c.pickA && c.pickB;
+    return `<article class="cx-card ${c.status} cat-${c.category}${c.live === false ? " is-paused" : ""}" data-comment-target>
+      <header class="cx-head">
+        <div class="cx-badges"><span class="cx-cat">${CATS[c.category]}</span>${isNew ? `<span class="cx-new">New</span>` : ""}${c.live === false ? `<span class="cx-paused">Paused</span>` : ""}${c.status === "joined" ? `<span class="cx-joined">Joined</span>` : ""}</div>
+        <span class="cx-site">${esc(c.site || "")}</span>
+      </header>
+      <div class="cx-titleblock">
+        <h3>${esc(c.name)}</h3>
+        ${c.org ? `<div class="cx-org">by ${esc(c.org)}</div>` : ""}
+      </div>
+      <div class="cx-rate">
+        <div class="cx-rate-main">${c.rateUpTo ? `<span class="cx-upto">up to</span>` : ""}<b>${c.rate ? "$" + Number(c.rate).toFixed(2) : "–"}</b><span class="cx-unit">per 1K views</span></div>
+        ${c.maxPerClip ? `<div class="cx-cap"><b>$${c.maxPerClip}</b><span>max per clip</span></div>` : ""}
+      </div>
+      <div class="cx-fund">
+        <div class="cx-fund-row"><span>Budget left</span><b>${c.budgetTotal ? money(left) + `<i> of ${money(c.budgetTotal)}</i>` : esc(c.budget || "Not shown")}</b></div>
+        ${pctLeft !== null ? `<div class="cx-meter ${pctLeft < 20 ? "low" : ""}" role="img" aria-label="${pctLeft}% of the budget left"><i style="width:${pctLeft}%"></i></div>` : ""}
+      </div>
+      <div class="cx-plat">${plat.length ? plat.map(k => `<span class="cx-pchip">${PL[k]}</span>`).join("") : `<span class="cx-muted">Platforms: see the campaign page</span>`}</div>
+      ${c.note ? `<p class="cx-note"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.5v.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>${esc(c.note)}</span></p>` : ""}
+      <div class="cx-who">
+        <span class="cx-who-label">${both ? "You both like this" : "Who's in?"}</span>
+        <span class="cx-avatars">
+          <button class="cx-av" type="button" data-pick="${c.id}|a" aria-pressed="${!!c.pickA}" title="${esc(shared.nameA)}" aria-label="${esc(shared.nameA)} likes this" ${readOnly ? "disabled" : ""}>${initials(shared.nameA)}</button>
+          <button class="cx-av b" type="button" data-pick="${c.id}|b" aria-pressed="${!!c.pickB}" title="${esc(shared.nameB)}" aria-label="${esc(shared.nameB)} likes this" ${readOnly ? "disabled" : ""}>${initials(shared.nameB)}</button>
+        </span>
+      </div>
+      <div class="cx-cta">
+        ${url ? `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Open campaign<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>` : ""}
+        ${readOnly ? "" : (c.status === "joined"
+          ? `<button class="btn success" type="button" data-cset="${c.id}|considering" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Joined</button>`
+          : c.status === "dropped" ? `<button class="btn" type="button" data-cset="${c.id}|considering">Restore</button>`
+          : `<button class="btn primary" type="button" data-cset="${c.id}|joined">Mark as joined</button>`)}
+      </div>
+      <footer class="cx-foot">
+        <span>${c.foundBy === "claude" ? `Found by Claude ${ago(c.foundAt)}` : "Added by you"}${c.checkedAt ? ` · checked ${ago(c.checkedAt)}` : ""}</span>
+        <span class="cx-links">${comments ? `<button class="linkbtn" type="button" data-ccomment="1">Comment</button>` : ""}${readOnly ? "" : `${c.status !== "dropped" ? `<button class="linkbtn" type="button" data-cset="${c.id}|dropped">Drop</button>` : ""}<button class="linkbtn danger" type="button" data-cdel="${c.id}">Remove</button>`}</span>
+      </footer>
+    </article>`;
+  }).join("") + (dropped && campFilter !== "joined" ? `<div class="cx-muted" style="grid-column:1/-1">${dropped} dropped campaign${dropped > 1 ? "s" : ""} hidden.</div>` : "");
+}
+const campBody = c => { const b = Object.assign({}, c); delete b.id; return b; };
+function saveCampaign(c) {
+  if (db) write("campaigns/" + c.id, () => db.doc("campaigns/" + c.id).set(campBody(c)));
+  else saveLocal();
+}
+function cleanCampaign(id, v) {
+  const num = x => Math.max(0, Number(x) || 0);
+  return { id, name: String(v.name || "").slice(0, 100), link: String(v.link || "").slice(0, 300), rate: Math.min(100, num(v.rate)), rateUpTo: !!v.rateUpTo,
+    budget: String(v.budget || "").slice(0, 40), budgetUsed: num(v.budgetUsed), budgetTotal: num(v.budgetTotal), maxPerClip: num(v.maxPerClip),
+    approval: String(v.approval || "").slice(0, 20), note: String(v.note || "").slice(0, 220), org: String(v.org || "").slice(0, 60), site: String(v.site || "").slice(0, 40),
+    category: CATS[v.category] ? v.category : "other", live: v.live === false ? false : true, foundBy: v.foundBy === "claude" ? "claude" : "team",
+    foundAt: num(v.foundAt), checkedAt: num(v.checkedAt),
+    platforms: { yt: !!(v.platforms && v.platforms.yt), tt: !!(v.platforms && v.platforms.tt), ig: !!(v.platforms && v.platforms.ig) },
+    status: ["considering", "joined", "dropped"].includes(v.status) ? v.status : "considering", pickA: !!v.pickA, pickB: !!v.pickB, created: num(v.created) };
+}
+document.addEventListener("change", e => {
+  const id = e.target.dataset && e.target.dataset.cstatus; if (!id || readOnly) return;
+  const c = shared.campaigns.find(x => x.id === id); if (!c) return;
+  c.status = e.target.value; saveCampaign(c); render();
+  if (c.status === "joined") toast(`Joined ${c.name}. Read its rules before your first clip.`);
+});
+
+// ---------- Clip studio ----------
+const CLIPPERS = { "OpusClip": "Opus Clip", "Everygen": "Everygen" };
+let mcp = null, sampler = null, myId = null;
+const polling = {}, localNote = {};
+const fmtDate = t => t ? new Date(t).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "";
+function cleanJob(id, v) {
+  const clips = Array.isArray(v.clips) ? v.clips.slice(0, 10).map(c => ({ title: String(c.title || "Clip").slice(0, 140), duration: Number(c.duration) || 0,
+    score: Number(c.score) || 0, preview: safeUrl(String(c.preview || "")) , hook: String(c.hook || "").slice(0, 120) })) : [];
+  return { id, url: safeUrl(String(v.url || "")), tool: CLIPPERS[v.tool] ? v.tool : "OpusClip", length: Math.max(10, Math.min(90, Number(v.length) || 20)),
+    count: Math.max(1, Math.min(10, Number(v.count) || 6)), who: ["a", "b"].includes(v.who) ? v.who : "a", ownerId: String(v.ownerId || ""),
+    status: ["queued", "starting", "processing", "done", "error"].includes(v.status) ? v.status : "queued", projectId: String(v.projectId || ""),
+    jobId: String(v.jobId || ""), shareUrl: safeUrl(String(v.shareUrl || "")), title: String(v.title || "").slice(0, 160), error: String(v.error || "").slice(0, 300),
+    clips, created: Number(v.created) || 0, finished: Number(v.finished) || 0 };
+}
+const jobBody = j => { const b = Object.assign({}, j); delete b.id; return b; };
+function saveJob(j) {
+  const i = shared.jobs.findIndex(x => x.id === j.id);
+  if (i >= 0) shared.jobs[i] = j; else shared.jobs = shared.jobs.concat([j]);
+  if (db) write("jobs/" + j.id, () => db.doc("jobs/" + j.id).set(jobBody(j))); else saveLocal();
+  render();
+}
+function errText(e, tool) {
+  const name = CLIPPERS[tool] || tool, c = e && e.code;
+  if (c === "server_not_connected") return `${name} isn't connected for you. Add it in claude.ai Settings → Connectors, then try again.`;
+  if (c === "needs_reauth") return `${name} needs to be reconnected in claude.ai Settings → Connectors.`;
+  if (c === "not_in_manifest") return `${name} is turned off for this page in your view.`;
+  if (c === "approval_required") return `This needs your approval. Click "Clip it" again and allow it.`;
+  if (c === "selection_required") return `You have more than one ${name} connector. Pick one when Claude asks.`;
+  if (c === "blocked_by_policy") return `${name} is blocked for your account.`;
+  if (c === "server_unavailable") return `${name} didn't answer. It may still be working; check your ${name} account before trying again.`;
+  if (c === "tool_error") { const m = String(e.message || ""); return /subscription|plan|credit|USAGE_LIMIT/i.test(m) ? `${name} needs a paid plan or more credits for this.` : `${name} said: ${m.slice(0, 200)}`; }
+  if (c === "not_granted" || c === "capability_disabled") return "Clipping from this page isn't available in your view.";
+  return `Something went wrong with ${name}. Please try again later.`;
+}
+function renderStudio() {
+  const el = document.getElementById("studio");
+  if (el.contains(document.activeElement) && document.activeElement.closest(".studioform")) { renderJobs(); return; }
+  const done = shared.jobs.filter(j => j.status === "done"), clipsMade = done.reduce((a, j) => a + j.clips.length, 0);
+  const busy = shared.jobs.filter(j => j.status === "processing" || j.status === "starting").length;
+  el.innerHTML = `
+    <div class="sx-hero">
+      <div class="sx-kicker"><span class="sx-dot"></span>${busy ? busy + " video" + (busy > 1 ? "s" : "") + " clipping now" : "Ready to clip"}</div>
+      <h2 class="sx-title">Turn streams into <span class="sx-grad">viral Shorts</span></h2>
+      <p class="sx-sub">Drop a YouTube link, pick your tool, length and clip count. Claude runs it on your account and writes the hooks.</p>
+      <div class="sx-stats"><div><b>${shared.jobs.length}</b><span>videos</span></div><div><b>${clipsMade}</b><span>clips made</span></div><div><b>${done.filter(j => j.clips.some(c => c.hook)).length}</b><span>with hooks</span></div></div>
+    </div>
+    ${readOnly ? "" : `<form class="studioform" id="studioform">
+      <div class="sx-drop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.7 1.7M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.7-1.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <label class="sx-vh" for="sUrl">YouTube link</label><input id="sUrl" type="url" required maxlength="300" placeholder="Paste a YouTube link…">
+        <button class="sx-go" type="submit">${mcp ? "Clip it" : "Add to queue"}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      <div class="sx-opts">
+        <fieldset class="sx-seg"><legend>Tool</legend>${Object.entries(CLIPPERS).map(([k, l], i) => `<label><input type="radio" name="sTool" value="${k}" ${i === 0 ? "checked" : ""}><span>${l}</span></label>`).join("")}</fieldset>
+        <fieldset class="sx-seg"><legend>Length</legend>${[15, 20, 30, 45, 60].map(n => `<label><input type="radio" name="sLen" value="${n}" ${n === 20 ? "checked" : ""}><span>${n}s</span></label>`).join("")}</fieldset>
+        <div class="sx-count"><span class="sx-lg" id="sCountLbl">Clips</span><button type="button" class="sx-step" data-cstep="-1" aria-label="Fewer clips">−</button><input id="sCount" type="number" min="1" max="10" value="6" aria-labelledby="sCountLbl"><button type="button" class="sx-step" data-cstep="1" aria-label="More clips">+</button></div>
+        <fieldset class="sx-seg"><legend>Added by</legend><label><input type="radio" name="sWho" value="a" checked><span>${esc(shared.nameA)}</span></label><label><input type="radio" name="sWho" value="b"><span>${esc(shared.nameB)}</span></label></fieldset>
+      </div>
+    </form>`}
+    <p class="sx-note">${mcp ? "Opus Clip aims for your length. Everygen picks its own (15–90s). Only clip videos you're allowed to use." :
+      "Clipping can't run in your view right now, but you can queue links. Whoever has the tool connected can start them."}</p>
+    <div class="jobs" id="jobs"></div>`;
+  renderJobs();
+}
+const GRADS = ["linear-gradient(160deg,#ff2d87,#7b2cff)", "linear-gradient(160deg,#ff7a18,#ff2d55)", "linear-gradient(160deg,#00d2ff,#7b2cff)", "linear-gradient(160deg,#20e3b2,#0b7bff)", "linear-gradient(160deg,#ffd000,#ff4d00)", "linear-gradient(160deg,#b14dff,#ff2d87)"];
+const FLAME = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5 5.5 5 11a5 5 0 01-10 0c0-2.5 1.2-4 2.5-5 .2 1.8 1 2.8 2.2 3.2C11 8.5 11 5 12 2z" fill="currentColor"/></svg>';
+function renderJobs() {
+  const box = document.getElementById("jobs"); if (!box) return;
+  const list = shared.jobs.slice().sort((a, b) => (b.created || 0) - (a.created || 0));
+  if (!list.length) { box.innerHTML = `<div class="sx-empty"><b>No videos yet</b>Paste your first YouTube link above and watch the clips roll in.</div>`; return; }
+  box.innerHTML = list.map(j => {
+    const label = { queued: "Queued", starting: "Starting", processing: "Clipping", done: "Ready", error: "Problem" }[j.status];
+    const mine = myId && j.ownerId === myId;
+    let body = "";
+    if (j.status === "processing" || j.status === "starting") body = `<div class="sx-bar"><i></i></div><p class="jobmsg">${CLIPPERS[j.tool]} is finding the best moments. Usually 5–15 minutes. ${mine ? "Keep this page open and the clips drop in by themselves." : `They show up when ${esc(ownerName(j.who))} opens this page.`}</p>`;
+    if (j.status === "error") body = `<p class="jobmsg err">${esc(j.error)}</p>`;
+    if (localNote[j.id]) body += `<p class="jobmsg">${esc(localNote[j.id])}</p>`;
+    if (j.status === "done") body += j.clips.length ? `<div class="sx-reel">${j.clips.map((c, i) => {
+      const inner = `<span class="sx-rank">#${i + 1}</span>${c.duration ? `<span class="sx-dur">0:${String(c.duration).padStart(2, "0")}</span>` : ""}
+        ${c.hook ? `<span class="sx-cap">${esc(c.hook)}</span>` : `<span class="sx-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>`}
+        <span class="sx-foot">${c.score ? `<span class="sx-fire">${FLAME}${c.score}</span>` : ""}<span class="sx-ct">${esc(c.title)}</span></span>`;
+      return c.preview ? `<a class="sx-phone" style="background:${GRADS[i % GRADS.length]}" href="${esc(c.preview)}" target="_blank" rel="noopener" aria-label="Preview clip ${i + 1}: ${esc(c.title)}">${inner}</a>`
+        : `<div class="sx-phone" style="background:${GRADS[i % GRADS.length]}">${inner}</div>`;
+    }).join("")}</div>` : `<p class="jobmsg">The clips are ready in your ${CLIPPERS[j.tool]} account.</p>`;
+    const btns = [];
+    if (mcp && !readOnly && (j.status === "queued" || j.status === "error")) btns.push(`<button class="sx-btn hot" type="button" data-run="${j.id}">${j.status === "error" ? "Try again" : "Clip it"}</button>`);
+    if (sampler && !readOnly && j.status === "done" && j.clips.length) btns.push(`<button class="sx-btn hot" type="button" data-hooks="${j.id}">${j.clips.some(c => c.hook) ? "Rewrite hooks with Claude" : "Write hooks with Claude"}</button>`);
+    if (j.shareUrl) btns.push(`<a class="sx-btn" href="${esc(j.shareUrl)}" target="_blank" rel="noopener">Open in ${CLIPPERS[j.tool]}</a>`);
+    if (j.url) btns.push(`<a class="sx-btn ghost" href="${esc(j.url)}" target="_blank" rel="noopener">Source video</a>`);
+    if (comments) btns.push(`<button class="linkbtn" type="button" data-jcomment="1">Comment</button>`);
+    if (!readOnly) btns.push(`<button class="linkbtn" type="button" data-jdel="${j.id}">Remove</button>`);
+    return `<article class="job sx-job" data-comment-target>
+      <div class="jobtop"><div><div class="jobtitle">${esc(j.title || j.url)}</div>
+        <div class="sx-tags"><span>${CLIPPERS[j.tool]}</span>${j.tool === "OpusClip" ? `<span>${j.length}s</span>` : ""}<span>${j.count} clips</span><span>by ${esc(ownerName(j.who))}</span>${j.created ? `<span>${fmtDate(j.created)}</span>` : ""}</div></div>
+        <span class="sx-state ${j.status}">${j.status === "processing" || j.status === "starting" ? '<span class="sx-dot"></span>' : ""}${label}</span></div>
+      ${body}<div class="jobbtns">${btns.join("")}</div></article>`;
+  }).join("");
+}
+async function runJob(j) {
+  if (!mcp || polling[j.id]) return;
+  j = Object.assign({}, j, { status: "starting", error: "", ownerId: myId || "" }); saveJob(j);
+  try {
+    if (j.tool === "OpusClip") {
+      const r = await mcp.callTool("OpusClip", "opusclip_submit_project", { videoUrl: j.url, aspectRatio: "portrait",
+        clipDurationsSec: [[Math.max(5, j.length - 3), j.length + 3]], enableCaption: true }, { cache: false });
+      const p = r.payload || {};
+      if (!p.project_id) throw { code: "tool_error", message: "Opus Clip didn't return a project." };
+      j = Object.assign({}, j, { status: "processing", projectId: String(p.project_id), shareUrl: safeUrl(String(p.share_url || "")), title: String(p.title || "").slice(0, 160) });
+    } else {
+      const r = await mcp.callTool("Everygen", "find_clips", { url: j.url, maxClips: j.count }, { cache: false });
+      const p = r.payload || {};
+      const id = p.jobId || p.job_id || p.id;
+      if (!id) throw { code: "tool_error", message: typeof p === "string" ? p : "Everygen didn't return a job." };
+      j = Object.assign({}, j, { status: "processing", jobId: String(id) });
+    }
+    saveJob(j); toast("Clipping started"); setTimeout(pollMine, 30000);
+  } catch (e) { j = Object.assign({}, j, { status: "error", error: errText(e, j.tool) }); saveJob(j); }
+}
+function pickClips(list, count) {
+  return list.slice().sort((a, b) => (a.rank || 99) - (b.rank || 99) || (b.score || 0) - (a.score || 0)).slice(0, count);
+}
+async function pollMine() {
+  if (!mcp || !myId) return;
+  for (const j of shared.jobs.filter(x => x.status === "processing" && x.ownerId === myId)) {
+    if (polling[j.id]) continue; polling[j.id] = true;
+    try {
+      if (j.tool === "OpusClip") {
+        const p = (await mcp.callTool("OpusClip", "opusclip_list_clips", { projectId: j.projectId }, { cache: false })).payload || {};
+        const stage = String(p.stage || "").toUpperCase();
+        if (stage === "COMPLETE" && Array.isArray(p.clips)) {
+          const clips = pickClips(p.clips, j.count).map(c => ({ title: c.title, duration: c.duration_sec, score: c.score, preview: c.preview_url }));
+          saveJob(cleanJob(j.id, Object.assign(jobBody(j), { status: "done", clips, finished: Date.now() })));
+          toast(`${clips.length} clips ready`);
+        } else if (/FAIL|ERROR/.test(stage)) saveJob(cleanJob(j.id, Object.assign(jobBody(j), { status: "error", error: "Opus Clip couldn't process this video." })));
+        else { localNote[j.id] = stage ? `Opus Clip status: ${stage.toLowerCase()}.` : ""; render(); }
+      } else {
+        const p = (await mcp.callTool("Everygen", "get_clips_status", { jobId: j.jobId }, { cache: false })).payload || {};
+        if (p.status === "complete") {
+          const raw = p.clips || p.moments || (p.result && (p.result.clips || p.result.moments)) || [];
+          const clips = pickClips(Array.isArray(raw) ? raw : [], j.count).map(c => ({ title: c.title || c.hook || "Clip",
+            duration: Math.round(c.duration || ((c.end || 0) - (c.start || 0)) || 0), score: c.score || 0, preview: c.url || c.videoUrl || "" }));
+          saveJob(cleanJob(j.id, Object.assign(jobBody(j), { status: "done", clips, finished: Date.now() })));
+          toast("Clips ready");
+        } else if (p.status === "failed") saveJob(cleanJob(j.id, Object.assign(jobBody(j), { status: "error", error: String(p.error || "Everygen couldn't clip this video.") })));
+        else { localNote[j.id] = p.stage ? `Everygen is ${p.stage}.` : ""; render(); }
+      }
+    } catch (e) { localNote[j.id] = errText(e, j.tool); render(); }
+    finally { polling[j.id] = false; }
+  }
+}
+async function writeHooks(j, btn) {
+  if (!sampler) return;
+  btn.disabled = true; btn.textContent = "Claude is writing…";
+  const prompt = `You write hooks for short vertical gaming clips (YouTube Shorts, TikTok, Reels) for a two-person clipping team focused on GTA 6 and gaming streamers.
+For each clip title below, write ONE on-screen hook in English: at most 8 words, punchy, creates curiosity, no hashtags, no emojis, no clickbait lies, no story spoilers.
+Return ONLY a JSON array of strings, one hook per clip, in the same order.
+Clips:
+${j.clips.map((c, i) => `${i + 1}. ${c.title}`).join("\n")}`;
+  try {
+    const v = await sampler.json(prompt, { modelTier: "quick" });
+    const hooks = Array.isArray(v) ? v : (v && Array.isArray(v.hooks) ? v.hooks : []);
+    const clips = j.clips.map((c, i) => Object.assign({}, c, { hook: String(hooks[i] || c.hook || "").slice(0, 120) }));
+    saveJob(cleanJob(j.id, Object.assign(jobBody(j), { clips }))); toast("Hooks written");
+  } catch (e) {
+    if (e && e.code === "not_granted") { sampler = null; render(); }
+    else toast(e && e.code === "rate_limited" ? "Claude is busy. Try again in a minute." : "Claude couldn't write hooks right now.");
+  }
+}
+document.addEventListener("submit", e => {
+  if (e.target.id !== "studioform") return;
+  e.preventDefault();
+  const url = safeUrl(document.getElementById("sUrl").value.trim());
+  if (!/^https:\/\/(www\.|m\.)?(youtube\.com|youtu\.be)\//.test(url)) { toast("Please paste a YouTube link that starts with https://"); return; }
+  const id = db ? db.collection("jobs").doc().id : Math.random().toString(36).slice(2, 10);
+  const j = cleanJob(id, { url, tool: (document.querySelector('input[name="sTool"]:checked') || {}).value, length: (document.querySelector('input[name="sLen"]:checked') || {}).value,
+    count: document.getElementById("sCount").value, who: (document.querySelector('input[name="sWho"]:checked') || {}).value, status: "queued", created: Date.now() });
+  document.activeElement && document.activeElement.blur();
+  saveJob(j);
+  if (mcp) runJob(j); else toast("Added to the queue");
+});
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.cstep) { const inp = document.getElementById("sCount"); inp.value = Math.max(1, Math.min(10, (Number(inp.value) || 6) + Number(b.dataset.cstep))); return; }
+  if (b.dataset.run) { const j = shared.jobs.find(x => x.id === b.dataset.run); if (j) runJob(j); }
+  if (b.dataset.hooks) { const j = shared.jobs.find(x => x.id === b.dataset.hooks); if (j) writeHooks(j, b); }
+  if (b.dataset.jcomment && comments) comments.openComposer({ element: b.closest(".job") }).catch(() => {});
+  if (b.dataset.jdel && !readOnly) {
+    if (!b.dataset.armed) { b.dataset.armed = "1"; b.textContent = "Sure?"; setTimeout(() => { b.textContent = "Remove"; delete b.dataset.armed; }, 3000); return; }
+    const id = b.dataset.jdel; shared.jobs = shared.jobs.filter(x => x.id !== id);
+    if (db) write("jobs/" + id, () => db.doc("jobs/" + id).delete()); else saveLocal();
+    render();
+  }
+});
+setInterval(() => { if (!document.hidden) pollMine(); }, 45000);
+
+// ---------- page switching ----------
+const PAGES = ["roadmap", "studio", "campaigns", "guide"];
+function showPage() {
+  const h = (location.hash || "").slice(1), cur = PAGES.includes(h) ? h : "roadmap";
+  document.querySelectorAll(".page").forEach(p => { p.hidden = p.dataset.page !== cur; });
+  document.querySelectorAll("#pagenav a").forEach(a => { if (a.dataset.page === cur) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+}
+function renderNavCounts() {
+  const all = STEPS.flatMap((s, i) => allTasks(i));
+  document.getElementById("pc-roadmap").textContent = Math.round(all.reduce((a, t) => a + prog(t), 0) / all.length * 100) + "%";
+  const busy = shared.jobs.filter(j => j.status === "processing" || j.status === "starting").length;
+  document.getElementById("pc-studio").textContent = busy ? busy + " clipping" : (shared.jobs.length || "");
+  document.getElementById("pc-campaigns").textContent = shared.campaigns.length || "";
+}
+window.addEventListener("hashchange", () => { showPage(); window.scrollTo({ top: 0 }); });
+showPage();
+
+function findTask(id) { for (let i = 0; i < STEPS.length; i++) for (const t of allTasks(i)) if (t.id === id) return t; }
+
+// ---- writes: one at a time per document ----
+const chains = {};
+function write(path, fn) {
+  if (!db) { saveLocal(); return; }
+  chains[path] = (chains[path] || Promise.resolve()).then(fn).catch(e => {
+    if (e && e.code === "invalid_argument") { readOnly = true; render(); toast("You can view this roadmap, but you need edit access to change it."); }
+    else if (e && e.code === "quota_exceeded") toast("The shared storage is full. Remove a custom task and try again.");
+    else toast("That change didn't save. Please try again.");
+  });
+}
+const saveProgress = id => write("progress/" + id, () => db.doc("progress/" + id).set({ done: !!shared.done[id], count: shared.count[id] || 0 }));
+const saveNames = () => write("team/settings", () => db.doc("team/settings").set({ nameA: shared.nameA, nameB: shared.nameB }));
+
+["nameA", "nameB"].forEach(k => document.getElementById(k).addEventListener("change", e => {
+  const v = e.target.value.trim() || (k === "nameA" ? "Clipper 1" : "Clipper 2");
+  if (v === shared[k]) return;
+  shared[k] = v; saveNames(); saveLocal(); render();
+}));
+
+document.addEventListener("submit", e => {
+  if (e.target.id === "campform") {
+    e.preventDefault();
+    const name = document.getElementById("cName").value.trim(); if (!name) return;
+    const link = document.getElementById("cLink").value.trim();
+    const id = db ? db.collection("campaigns").doc().id : Math.random().toString(36).slice(2, 10);
+    const c = cleanCampaign(id, { name, link: safeUrl(link), rate: document.getElementById("cRate").value, budget: document.getElementById("cBudget").value.trim(),
+      category: document.getElementById("cCat").value, foundBy: "team", foundAt: Date.now(), note: document.getElementById("cNote").value.trim(),
+      platforms: { yt: document.getElementById("pYT").checked, tt: document.getElementById("pTT").checked, ig: document.getElementById("pIG").checked },
+      status: "considering", created: Date.now() });
+    shared.campaigns = shared.campaigns.concat([c]); saveCampaign(c);
+    document.activeElement && document.activeElement.blur(); render(); toast("Campaign added");
+    return;
+  }
+  if (e.target.id !== "addform") return;
+  e.preventDefault();
+  const title = document.getElementById("newTitle").value.trim();
+  if (!title) return;
+  const item = { step: view.step, title, how: document.getElementById("newHow").value.trim(), owner: document.getElementById("newOwner").value, created: Date.now() };
+  if (db) {
+    const ref = db.collection("custom").doc();
+    item.key = ref.id;
+    shared.custom = shared.custom.concat([item]); render();
+    write("custom/" + ref.id, () => ref.set({ step: item.step, title: item.title, how: item.how, owner: item.owner, created: item.created }));
+  } else {
+    item.key = Math.random().toString(36).slice(2, 10);
+    shared.custom = shared.custom.concat([item]); saveLocal(); render();
+  }
+  toast("Task added");
+});
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  const i = view.step, wasDone = stepDone(i);
+  if (b.dataset.show) { view.show = b.dataset.show; saveView(); render(); return; }
+  if (b.dataset.i !== undefined) { view.step = +b.dataset.i; saveView(); render(); return; }
+  if (b.dataset.next) { view.step = Math.min(i + 1, STEPS.length - 1); saveView(); render(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+  if (b.dataset.comment && comments) {
+    comments.openComposer({ element: b.closest(".card") }).catch(err => {
+      if (err && (err.code === "unavailable" || err.code === "not_granted")) { comments = null; render(); }
+    });
+    return;
+  }
+  if (b.dataset.cfilter) { campFilter = b.dataset.cfilter; renderCampaigns(); return; }
+  if (b.dataset.ccomment && comments) {
+    comments.openComposer({ element: b.closest(".cx-card") }).catch(err => { if (err && (err.code === "unavailable" || err.code === "not_granted")) { comments = null; render(); } });
+    return;
+  }
+  if (readOnly) return;
+  if (b.dataset.cset) {
+    const [id, st] = b.dataset.cset.split("|"); const c = shared.campaigns.find(x => x.id === id); if (!c) return;
+    c.status = st; saveCampaign(c); render();
+    if (st === "joined") toast(`Joined ${c.name}. Read its rules before your first clip.`);
+    if (st === "dropped") toast("Campaign dropped");
+    return;
+  }
+  if (b.dataset.pick) {
+    const [id, who] = b.dataset.pick.split("|"); const c = shared.campaigns.find(x => x.id === id); if (!c) return;
+    if (who === "a") c.pickA = !c.pickA; else c.pickB = !c.pickB;
+    saveCampaign(c); render();
+    if (c.pickA && c.pickB) toast("You both like this one. Time to join it?");
+    return;
+  }
+  if (b.dataset.cdel) {
+    if (!b.dataset.armed) { b.dataset.armed = "1"; b.textContent = "Sure?"; setTimeout(() => { b.textContent = "Remove"; delete b.dataset.armed; }, 3000); return; }
+    const id = b.dataset.cdel; shared.campaigns = shared.campaigns.filter(x => x.id !== id);
+    if (db) write("campaigns/" + id, () => db.doc("campaigns/" + id).delete()); else saveLocal();
+    render(); return;
+  }
+  if (b.dataset.del) {
+    if (!b.dataset.armed) { b.dataset.armed = "1"; b.textContent = "Sure?"; setTimeout(() => { b.textContent = "Remove"; delete b.dataset.armed; }, 3000); return; }
+    const key = b.dataset.del;
+    shared.custom = shared.custom.filter(c => c.key !== key);
+    delete shared.done["c_" + key];
+    if (db) { write("custom/" + key, () => db.doc("custom/" + key).delete()); write("progress/c_" + key, () => db.doc("progress/c_" + key).delete()); }
+    else saveLocal();
+    render(); return;
+  }
+  if (b.dataset.toggle) { const t = findTask(b.dataset.toggle); shared.done[t.id] = !shared.done[t.id]; saveProgress(t.id); if (shared.done[t.id]) toast(`+${t.pts} points`); }
+  if (b.dataset.inc) { const t = findTask(b.dataset.inc); const c = shared.count[t.id] || 0; if (c < t.target) { shared.count[t.id] = c + 1; saveProgress(t.id); if (c + 1 === t.target) toast(`${t.title}: done! +${t.pts} points`); } }
+  if (b.dataset.dec) { const t = findTask(b.dataset.dec); shared.count[t.id] = Math.max(0, (shared.count[t.id] || 0) - 1); saveProgress(t.id); }
+  if (b.id === "reset") {
+    if (!b.dataset.armed) { b.dataset.armed = "1"; b.textContent = "Click again to reset for both of you"; setTimeout(() => { b.textContent = "Reset progress"; delete b.dataset.armed; }, 3000); return; }
+    const ids = new Set(Object.keys(shared.done).concat(Object.keys(shared.count)));
+    shared.done = {}; shared.count = {};
+    ids.forEach(id => { if (db) write("progress/" + id, () => db.doc("progress/" + id).delete()); });
+    saveLocal(); b.textContent = "Reset progress"; delete b.dataset.armed; toast("Progress reset"); render(); return;
+  }
+  if (!wasDone && stepDone(i)) toast(`${STEPS[i].badge} unlocked! +${STEPS[i].bonus} points`);
+  saveLocal(); render();
+});
+
+render();
+
+// ---- connect to shared storage and comments, when this view offers them ----
+(async () => {
+  if (!window.claude || typeof window.claude.use !== "function") return;
+  try { comments = await window.claude.use("comments"); if (comments) render(); } catch (e) { comments = null; }
+  window.claude.use("mcp").then(m => { mcp = m; render(); pollMine(); }).catch(() => {});
+  window.claude.use("sample").then(sm => { sampler = sm; render(); }).catch(() => {});
+  let d = null;
+  try { d = await window.claude.use("db"); } catch (e) { d = null; }
+  if (!d) return;
+  db = d; syncState = "loading";
+  // start from the shared copy, not this browser's
+  shared = { done: {}, count: {}, nameA: "Lucas", nameB: "Partner", custom: [], campaigns: [], jobs: [] };
+  render();
+  const timer = setTimeout(() => { if (syncState === "loading") { syncState = "stale"; render(); } }, 10000);
+  const live = snap => { if (!snap.metadata.fromCache) { clearTimeout(timer); syncState = "live"; } };
+  const fail = () => { clearTimeout(timer); syncState = "stale"; render(); };
+  db.collection("progress").onSnapshot(snap => {
+    const done = {}, count = {};
+    snap.docs.forEach(doc => { const v = doc.data() || {}; if (v.done) done[doc.id] = true; if (v.count) count[doc.id] = v.count; });
+    shared.done = done; shared.count = count; live(snap); render();
+  }, fail);
+  db.doc("team/settings").onSnapshot(snap => {
+    const v = snap.exists ? snap.data() : null;
+    if (v) { if (v.nameA) shared.nameA = String(v.nameA).slice(0, 16); if (v.nameB) shared.nameB = String(v.nameB).slice(0, 16); }
+    live(snap); render();
+  }, fail);
+  db.collection("custom").onSnapshot(snap => {
+    shared.custom = snap.docs.map(doc => { const v = doc.data() || {};
+      return { key: doc.id, step: Math.max(0, Math.min(STEPS.length - 1, Number(v.step) || 0)), title: String(v.title || "").slice(0, 80), how: String(v.how || "").slice(0, 200),
+        owner: ["a", "b", "both"].includes(v.owner) ? v.owner : "both", created: Number(v.created) || 0 }; }).filter(c => c.title);
+    live(snap); render();
+  }, fail);
+  db.collection("jobs").onSnapshot(snap => {
+    shared.jobs = snap.docs.map(doc => cleanJob(doc.id, doc.data() || {}));
+    live(snap); render(); pollMine();
+  }, fail);
+  db.doc("meta/scout").onSnapshot(snap => { scoutInfo = snap.exists ? snap.data() : null; render(); }, () => {});
+  db.collection("campaigns").onSnapshot(snap => {
+    shared.campaigns = snap.docs.map(doc => cleanCampaign(doc.id, doc.data() || {})).filter(c => c.name);
+    live(snap); render();
+  }, fail);
+  try {
+    const user = await window.claude.use("user");
+    if (user && typeof user.id === "function") { try { myId = await user.id(); } catch (e) {} }
+    if (user && typeof user.can === "function") { const ok = await user.can("data.write"); if (ok === false) { readOnly = true; render(); } }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
